@@ -4,9 +4,13 @@
 #include "SCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Math/TransformNonVectorized.h"
+#include "Engine/World.h"
+#include "Engine/EngineTypes.h"
 
 
 // Sets default values
@@ -18,10 +22,13 @@ ASCharacter::ASCharacter()
 	// 添加弹簧臂组件
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->SetupAttachment(RootComponent);
+	SpringArmComp->bUsePawnControlRotation = true; // 摄像机与Pawn旋转同步
 	// 添加相机组件
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝运动方向旋转
+	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转
 }
 
 // Called when the game starts or when spawned
@@ -55,13 +62,12 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		// 跳跃
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
 		// 移动
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASCharacter::Move);
-
 		// 看
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
-
+		// 普通攻击
+		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 	}
 }
 
@@ -105,4 +111,16 @@ void ASCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+// 普通攻击
+void ASCharacter::PrimaryAttack()
+{
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FActorSpawnParameters SpawnParames;
+	SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
 }
