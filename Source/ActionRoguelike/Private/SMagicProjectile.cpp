@@ -7,6 +7,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -42,6 +43,24 @@ void ASMagicProjectile::BeginPlay()
 void ASMagicProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
+// 注册事件回调函数
+void ASMagicProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	// 注册组件碰撞事件处理函数  
+	SphereComp->OnComponentHit.AddDynamic(this, &ASMagicProjectile::OnActorHit);
+}
+
+// 组件碰撞事件处理函数  
+void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	DrawDebugSphere(GetWorld(), GetActorLocation(), 10.0f, 32, FColor::Green, false, 2.0f); // Debug球
+	// 生成特效
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation(), GetActorRotation(), FVector(1.0f, 1.0f, 1.0f), true, EPSCPoolMethod::None, true);
+	// 碰撞后消失
+	Destroy();
+}
