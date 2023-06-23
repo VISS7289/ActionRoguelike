@@ -6,6 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/PrimitiveComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -32,6 +33,8 @@ ASMagicProjectile::ASMagicProjectile()
 void ASMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	// ºöÂÔ·¢ÉäÕß
+	SphereComp->IgnoreActorWhenMoving(GetInstigator(),true);
 	
 }
 

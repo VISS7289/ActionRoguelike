@@ -23,6 +23,6 @@ class ACTIONROGUELIKE_API ISGmeplayInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	// ½»»¥½Ó¿Ú
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Interact(APawn* InstigatorPawn);
 };

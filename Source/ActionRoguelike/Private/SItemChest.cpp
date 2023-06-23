@@ -3,6 +3,7 @@
 
 #include "SItemChest.h"
 #include "Components/StaticMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 ASItemChest::ASItemChest()
@@ -16,6 +17,12 @@ ASItemChest::ASItemChest()
 	// 添加盖子网格体组件
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
 	LidMesh->SetupAttachment(BaseMesh);
+	// 添加宝藏网格体组件
+	Treasure = CreateDefaultSubobject<UStaticMeshComponent>("Treasure");
+	Treasure->SetupAttachment(BaseMesh);
+	// 添加粒子系统
+	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
+	EffectComp->SetupAttachment(Treasure);
 
 }
 

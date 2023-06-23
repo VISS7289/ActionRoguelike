@@ -21,7 +21,7 @@ public:
 
 protected:
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComp; // Çò
 
 	UPROPERTY(VisibleAnywhere)
@@ -36,5 +36,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// ÖØÔØUSphereComponentµÄOnComponentHit
+	
 
 };
