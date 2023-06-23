@@ -13,6 +13,7 @@
 #include "Engine/EngineTypes.h"
 #include "SInteractionComponent.h"
 #include "Animation/AnimMontage.h"
+#include "SAttributeComponent.h"
 
 
 // Sets default values
@@ -30,6 +31,8 @@ ASCharacter::ASCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 	// 添加交互组件
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
+	// 添加属性组件
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝运动方向旋转
 	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转

@@ -11,6 +11,7 @@
 class USpringArmComponent; // 弹簧臂组件
 class UCameraComponent; // 摄像机组件
 class USInteractionComponent; // 交互组件
+class USAttributeComponent; // 属性组件
 
 class UAnimMontage; // 动画蒙太奇
 
@@ -39,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp; // 交互组件
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Component")
+	USAttributeComponent* AttributeComp; // 属性组件
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
