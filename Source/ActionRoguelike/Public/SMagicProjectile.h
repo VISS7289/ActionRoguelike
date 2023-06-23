@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+// 该类为魔法攻击抛射物
 #pragma once
 
 #include "CoreMinimal.h"

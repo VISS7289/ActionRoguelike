@@ -11,6 +11,8 @@
 #include "Math/TransformNonVectorized.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "SInteractionComponent.h"
+#include "Animation/AnimMontage.h"
 
 
 // Sets default values
@@ -26,6 +28,8 @@ ASCharacter::ASCharacter()
 	// 添加相机组件
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+	// 添加交互组件
+	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝运动方向旋转
 	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转
@@ -68,6 +72,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
 		// 普通攻击
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		// 交互物体
+		EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryInteract);
 	}
 }
 
@@ -116,11 +122,31 @@ void ASCharacter::Look(const FInputActionValue& Value)
 // 普通攻击
 void ASCharacter::PrimaryAttack()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+	PlayAnimMontage(AttackAnim); // 播放蒙太奇
 
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f); // 延时触发攻击
+	// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
+}
+// 普通攻击延时
+void ASCharacter::PrimaryAttack_TimeElapsed()
+{
+	// 左手位置
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+	// 角色前向位置
 	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
 	FActorSpawnParameters SpawnParames;
 	SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
+	// 生成抛射物
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
+}
+
+// 交互物体
+void ASCharacter::PrimaryInteract()
+{
+	// 调用交互组件
+	if (InteractionComp)
+	{
+		InteractionComp->PrimaryInteract();
+	}
+	
 }
