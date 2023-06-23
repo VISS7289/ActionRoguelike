@@ -122,24 +122,31 @@ void ASCharacter::Look(const FInputActionValue& Value)
 // 普通攻击
 void ASCharacter::PrimaryAttack()
 {
-	PlayAnimMontage(AttackAnim); // 播放蒙太奇
+	if (ensureAlways(AttackAnim))
+	{
+		PlayAnimMontage(AttackAnim); // 播放蒙太奇
 
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f); // 延时触发攻击
-	// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
+		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f); // 延时触发攻击
+		// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
+	}
 }
 // 普通攻击延时
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	// 左手位置
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
-	// 角色前向位置
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-	FActorSpawnParameters SpawnParames;
-	SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParames.Instigator = this;
+	if (ensureAlways(ProjectileClass))
+	{
+		// 左手位置
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+		// 角色前向位置
+		FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+		FActorSpawnParameters SpawnParames;
+		SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParames.Instigator = this;
 
-	// 生成抛射物
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
+		// 生成抛射物
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
+	}
+	
 }
 
 // 交互物体

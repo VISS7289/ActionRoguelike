@@ -4,6 +4,7 @@
 #include "SExplosiveBarrel.h"
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASExplosiveBarrel::ASExplosiveBarrel()
@@ -39,4 +40,13 @@ void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 {
 	// 触发辐射力组件的脉冲  
 	ForceComp->FireImpulse();
+
+	//LogTemp: OnActorHit in Explosive Barrel
+	//LogTemp : Warning: OtherActor: BP_MagicProjectile_C_3, at game time : 24.953748
+	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
+	UE_LOG(LogTemp, Warning, TEXT("OtherActor: %s, at game time: %f"), *GetNameSafe(OtherActor), GetWorld()->TimeSeconds);
+
+	// 游戏中打印字符串
+	FString CombinedString = FString::Printf(TEXT("Hit At Location: %s"), *Hit.ImpactPoint.ToString());
+	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
 }
