@@ -5,6 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "DrawDebugHelpers.h"
+#include "SAttributeComponent.h"
 
 // Sets default values
 ASExplosiveBarrel::ASExplosiveBarrel()
@@ -40,6 +41,16 @@ void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 {
 	// 触发辐射力组件的脉冲  
 	ForceComp->FireImpulse();
+
+	// 如果玩家碰到炸药桶，则对玩家造成伤害
+	
+	// 获取玩家属性组件
+	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	if (AttributeComp)
+	{
+		AttributeComp->ApplyHealthChange(-50.0f);
+	}
+
 
 	//LogTemp: OnActorHit in Explosive Barrel
 	//LogTemp : Warning: OtherActor: BP_MagicProjectile_C_3, at game time : 24.953748
