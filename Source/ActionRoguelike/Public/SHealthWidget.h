@@ -6,8 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "SHealthWidget.generated.h"
 
-class USAttributeComponent;
-class UWidgetAnimation;
+class USAttributeComponent; // 属性组件
+class UWidgetAnimation; // UI动画
+class UMaterialInstanceDynamic; // 动态材质接口
 
 /**
  * 
@@ -36,6 +37,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Player Health")
 	float HealthRate; // 生命值百分比
 
+	UPROPERTY(BlueprintReadWrite, Category = "Player Health")
+	UMaterialInstanceDynamic* HealthMaterial; // 血条材质
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animations")
 	UWidgetAnimation* PauseHealthAnim; // 生命值减少动画
 	
@@ -45,7 +49,7 @@ protected:
 	virtual void NativeConstruct() override;
 
 	// 生命值改变时更新UI
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 	// 普通更新生命值函数

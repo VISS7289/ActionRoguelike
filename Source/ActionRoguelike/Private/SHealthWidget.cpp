@@ -5,6 +5,7 @@
 #include "SAttributeComponent.h"
 #include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // 默认构造方法
 USHealthWidget::USHealthWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -41,6 +42,9 @@ void USHealthWidget::GetHealthChange(AActor* InstigatordActor, USAttributeCompon
 
 	// 播放PauseHealthAnim动画
 	PlayAnimation(PauseHealthAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.0f);
+
+	// 血条材质更新（已经设置好了，只需要PrograssAlpha与HealthRate）
+	HealthMaterial->SetScalarParameterValue("PrograssAlpha", HealthRate);
 }
 
 // 普通更新生命值函数
