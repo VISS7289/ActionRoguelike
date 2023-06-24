@@ -57,6 +57,8 @@ protected:
 
 	FTimerHandle TimerHandle_PrimaryAttack; // 延时
 
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
+
 
 // 输入相关
 protected:

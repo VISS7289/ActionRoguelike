@@ -14,6 +14,8 @@
 #include "SInteractionComponent.h"
 #include "Animation/AnimMontage.h"
 #include "SAttributeComponent.h"
+#include "CollisionShape.h"
+#include "CollisionQueryParams.h"
 
 
 // Sets default values
@@ -136,19 +138,20 @@ void ASCharacter::PrimaryAttack()
 // 普通攻击延时
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	if (ensureAlways(ProjectileClass))
-	{
-		// 左手位置
-		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
-		// 角色前向位置
-		FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-		FActorSpawnParameters SpawnParames;
-		SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParames.Instigator = this;
+	SpawnProjectile(ProjectileClass);
+	//if (ensureAlways(ProjectileClass))
+	//{
+	//	// 左手位置
+	//	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+	//	// 角色前向位置
+	//	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	//	FActorSpawnParameters SpawnParames;
+	//	SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	//	SpawnParames.Instigator = this;
 
-		// 生成抛射物
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
-	}
+	//	// 生成抛射物
+	//	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
+	//}
 	
 }
 
@@ -161,4 +164,50 @@ void ASCharacter::PrimaryInteract()
 		InteractionComp->PrimaryInteract();
 	}
 	
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 工具函数
+
+void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
+{
+	if (ensureAlways(ClassToSpawn))
+	{
+		// 左手位置
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
+		
+		// 胶囊检测体设置
+		FCollisionShape Shape;
+		Shape.SetSphere(20.0f);
+		// 设置碰撞
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+		// 设置检测物
+		FCollisionObjectQueryParams ObjParams;
+		ObjParams.AddObjectTypesToQuery(ECC_WorldStatic);
+		ObjParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		ObjParams.AddObjectTypesToQuery(ECC_Pawn);
+		// 设置起点，相机
+		FVector TraceStart = CameraComp->GetComponentLocation();
+		// 设置终点，相机到屏幕中间第一个触碰到的物体
+		FVector TraceEnd = CameraComp->GetComponentLocation() + (CameraComp->GetComponentRotation().Vector() * 5000);
+		// 胶囊检测
+		FHitResult Hit;
+		if (GetWorld()->SweepSingleByObjectType(Hit, TraceStart, TraceEnd, FQuat::Identity, ObjParams, Shape, Params))
+		{
+			TraceEnd = Hit.ImpactPoint;
+		}
+		// 根据检测结果计算旋转方向
+		FRotator ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
+
+
+		// 角色前向位置
+		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
+		// 设置生成物规则
+		FActorSpawnParameters SpawnParames;
+		SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParames.Instigator = this;
+		// 生成抛射物
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
+	}
 }
