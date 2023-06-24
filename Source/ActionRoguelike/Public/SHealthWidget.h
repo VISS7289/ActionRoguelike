@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+// 这个类是玩家血条
 #pragma once
 
 #include "CoreMinimal.h"
@@ -37,7 +37,7 @@ protected:
 	float HealthRate; // 生命值百分比
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animations")
-	UWidgetAnimation* PauseHealthAnim;
+	UWidgetAnimation* PauseHealthAnim; // 生命值减少动画
 	
 protected:
 

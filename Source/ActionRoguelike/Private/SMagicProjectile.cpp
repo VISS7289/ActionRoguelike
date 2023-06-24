@@ -59,7 +59,7 @@ void ASMagicProjectile::PostInitializeComponents()
 // 组件碰撞事件处理函数  
 void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (ensureAlways(HitEffect))
+	if (ensureAlways(HitEffect) && OtherActor != GetInstigator())
 	{
 		DrawDebugSphere(GetWorld(), GetActorLocation(), 10.0f, 32, FColor::Green, false, 2.0f); // Debug球
 		// 生成特效

@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "SAttributeComponent.generated.h"
 
-
+// 注册生命值改变事件
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatordActor, USAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
 
 
@@ -34,6 +34,7 @@ public:
 	// 生命值获取
 	float GetHealth();
 
+	// 注册生命值改变事件
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
 };
