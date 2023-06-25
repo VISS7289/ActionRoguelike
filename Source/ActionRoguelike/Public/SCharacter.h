@@ -100,6 +100,12 @@ protected:
 	// 交互物体
 	void PrimaryInteract();
 
+	// 注册事件回调函数
+	virtual void PostInitializeComponents() override;
+
+	// 死亡判断
+	UFUNCTION()
+	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 	
 
 public:	

@@ -25,3 +25,9 @@ float USAttributeComponent::GetHealth()
 {
 	return Health;
 }
+
+// ÊÇ·ñ»î×Å
+bool USAttributeComponent::IsAlive() const
+{
+	return Health > 0.0f;
+}

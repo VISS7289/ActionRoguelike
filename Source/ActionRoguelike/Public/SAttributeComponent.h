@@ -27,6 +27,10 @@ protected:
 
 public:	
 
+	// 是否活着
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool IsAlive() const;
+
 	// 生命值改变
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(float Delta);

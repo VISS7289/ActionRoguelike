@@ -40,6 +40,15 @@ ASCharacter::ASCharacter()
 	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转
 }
 
+// 注册事件回调函数
+void ASCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	// 注册组件碰撞事件处理函数  
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::GetHealthChange);
+}
+
 // Called when the game starts or when spawned
 void ASCharacter::BeginPlay()
 {
@@ -82,6 +91,17 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	}
 }
 
+
+// 死亡判断
+void ASCharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
+{
+	// 确认死亡后禁用输入
+	if (NewHealth <= 0.0f && Delta <= 0.0f)
+	{
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		DisableInput(PC);
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 角色输入
