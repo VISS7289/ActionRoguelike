@@ -139,20 +139,6 @@ void ASCharacter::PrimaryAttack()
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
 	SpawnProjectile(ProjectileClass);
-	//if (ensureAlways(ProjectileClass))
-	//{
-	//	// 左手位置
-	//	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
-	//	// 角色前向位置
-	//	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-	//	FActorSpawnParameters SpawnParames;
-	//	SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	//	SpawnParames.Instigator = this;
-
-	//	// 生成抛射物
-	//	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
-	//}
-	
 }
 
 // 交互物体

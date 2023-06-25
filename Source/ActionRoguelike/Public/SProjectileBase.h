@@ -34,6 +34,13 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* EffectComp; // 粒子系统
 
+	// 自我销毁计时器
+	FTimerHandle FTimerHandle_DestoryPrjDelay;
+	float DestoryPrjDelay;
+
+	// 自我销毁
+	virtual void DestoryPrj();
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
