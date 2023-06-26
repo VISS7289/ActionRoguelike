@@ -28,7 +28,7 @@ void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, u
 					// 计算玩家与AI的距离
 					float Distance = FVector::Distance(TargetAcotr->GetActorLocation(), AIPawn->GetActorLocation());
 
-					bool bWithinRange = Distance < 400.0f;
+					bool bWithinRange = Distance < 2000.0f;
 					bool bHasLineSight = false;
 					// 在攻击范围内判断是否在视线范围内
 					if (bWithinRange)

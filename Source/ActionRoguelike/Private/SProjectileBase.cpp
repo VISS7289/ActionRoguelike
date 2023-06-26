@@ -17,6 +17,7 @@ ASProjectileBase::ASProjectileBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	DestoryPrjDelay = 10.0f; // 最多存在10s
+	Damage = -20.0f; // 默认伤害20
 
 	// 添加球体组件
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
@@ -68,7 +69,7 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (AttributeComp)
 		{
-			AttributeComp->ApplyHealthChange(-20.0f);
+			AttributeComp->ApplyHealthChange(Damage);
 		}
 		Explode();
 	}

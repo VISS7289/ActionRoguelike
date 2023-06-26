@@ -38,6 +38,9 @@ protected:
 	FTimerHandle FTimerHandle_DestoryPrjDelay;
 	float DestoryPrjDelay;
 
+	UPROPERTY(EditAnywhere)
+		float Damage; // ик╨╕
+
 	// втнроЗ╩ы
 	virtual void DestoryPrj();
 
