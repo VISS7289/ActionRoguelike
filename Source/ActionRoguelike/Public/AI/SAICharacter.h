@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "SAICharacter.generated.h"
 
+
+class UPawnSensingComponent;
+
+
 UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
 {
@@ -16,11 +20,15 @@ public:
 	ASAICharacter();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	// 注册事件回调函数
+	virtual void PostInitializeComponents() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UPawnSensingComponent* PawnSensingComponent; // 注意力组件
+
+	// 注意到玩家时，打印调试信息与设置黑板注意对象
+	UFUNCTION()
+	void OnPawnSeen(APawn* Pawn);
 
 };
