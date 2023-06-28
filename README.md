@@ -9,6 +9,8 @@
   * -SDashProjectile 传送弹
   * -SBlackHoleProjectile 黑洞弹
 * SItemChest 可交互宝箱物体 G--SGmeplayInterface 游戏接口类
+* SPowerupActor 回血物品基类 G--SGmeplayInterface 游戏接口类
+  * -SPowerup_HealthPotion 血瓶
 * SExplosiveBarrel 炸药桶
 * STargetDummy 击中后闪烁的物体
 * SAICharacter AI角色类

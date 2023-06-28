@@ -9,7 +9,10 @@ void ASAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	// 运行行为树
-	RunBehaviorTree(BehaviorTree);
+	if (ensureMsgf(BehaviorTree, TEXT("Behavior Tree Is A NullPtr! Please Set Behavior Tree In AI Controller.")))
+	{
+		RunBehaviorTree(BehaviorTree);
+	}
 
 
 	//// 设置

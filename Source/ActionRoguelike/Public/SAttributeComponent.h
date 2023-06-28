@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health; // 生命值
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float HealthMax; // 最大生命值
+
 
 public:	
 
@@ -31,12 +34,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool IsAlive() const;
 
+	// 是否满血
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool IsFullHealth() const;
+
 	// 生命值改变
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(float Delta);
 
 	// 生命值获取
 	float GetHealth();
+
+	// 最大生命值获取
+	float GetHealthMax();
 
 	// 注册生命值改变事件
 	UPROPERTY(BlueprintAssignable)

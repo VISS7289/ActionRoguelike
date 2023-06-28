@@ -7,6 +7,9 @@
 #include "SGmeplayInterface.h"
 #include "DrawDebugHelpers.h"
 #include "CollisionShape.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/Actor.h"
 
 
 // Sets default values for this component's properties
@@ -45,12 +48,26 @@ void USInteractionComponent::PrimaryInteract()
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	// 设置起点终点
-	FVector  EyeLocation; // 起点
-	FRotator EyeRotation; // 眼睛朝向
+	FVector Start, End;
 	AActor* MyOwner = GetOwner();
-	MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 	
-	FVector End = EyeLocation + (EyeRotation.Vector() * 1000); // 终点
+	// 获取相机， 如果有相机组件就用相机组件计算起点终点，否则就用角色眼睛与转向
+	UCameraComponent* CameraComp = Cast<UCameraComponent>(MyOwner->GetComponentByClass(UCameraComponent::StaticClass()));
+	if (CameraComp)
+	{
+		// 设置起点，相机
+		Start = CameraComp->GetComponentLocation();
+		// 设置终点，相机到屏幕中间第一个触碰到的物体
+		End = CameraComp->GetComponentLocation() + (CameraComp->GetComponentRotation().Vector() * 500);
+	}
+	else {
+		FVector  EyeLocation; // 眼睛位置
+		FRotator EyeRotation; // 眼睛朝向
+		
+		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+		Start = EyeLocation;
+		End = EyeLocation + (EyeRotation.Vector() * 500); // 终点
+	}
 
 	//FHitResult Hit;
 	//bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
@@ -60,7 +77,7 @@ void USInteractionComponent::PrimaryInteract()
 	TArray<FHitResult> Hits; // 检测到的目标数组
 	FCollisionShape Shape; // 检测物体形状
 	Shape.SetSphere(Radius);
-	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape); // 胶囊检测
+	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, Start, End, FQuat::Identity, ObjectQueryParams, Shape); // 胶囊检测
 	FColor HitColor = bBlockingHit ? FColor::Green : FColor::Red; // 根据是否检测到物体确定Debug颜色
 
 	// 逐个调用接口
@@ -83,7 +100,7 @@ void USInteractionComponent::PrimaryInteract()
 		
 	}
 	
-	DrawDebugLine(GetWorld(), EyeLocation, End, HitColor, false, 2.0f, 0, 2.0f); // Debug线
+	DrawDebugLine(GetWorld(), Start, End, HitColor, false, 2.0f, 0, 2.0f); // Debug线
 
 }
 
