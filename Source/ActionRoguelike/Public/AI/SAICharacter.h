@@ -22,14 +22,17 @@ public:
 
 protected:
 
-	// 注册事件回调函数
-	virtual void PostInitializeComponents() override;
-
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UPawnSensingComponent* PawnSensingComponent; // 环境感知组件
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USAttributeComponent* AttributeComp; // 属性组件
+
+	// 注册事件回调函数
+	virtual void PostInitializeComponents() override;
+
+	// 设置攻击对象
+	void SetTargetActor(AActor* NewTarget);
 
 	// 注意到玩家时，打印调试信息与设置黑板注意对象
 	UFUNCTION()

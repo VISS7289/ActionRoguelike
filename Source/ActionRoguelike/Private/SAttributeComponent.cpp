@@ -12,7 +12,7 @@ USAttributeComponent::USAttributeComponent()
 
 
 // 生命值改变
-bool USAttributeComponent::ApplyHealthChange(float Delta)
+bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Delta)
 {
 	// 记录过去生命并加血
 	float OldHealth = Health; 
@@ -20,7 +20,7 @@ bool USAttributeComponent::ApplyHealthChange(float Delta)
 	// 计算变化量
 	float ActualDelta = Health - OldHealth;
 	// 触发生命值改变事件
-	OnHealthChanged.Broadcast(nullptr, this, Health, ActualDelta);
+	OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
 	// 返回结果
 	return ActualDelta != 0;
 }

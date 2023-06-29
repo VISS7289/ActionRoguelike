@@ -86,6 +86,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
 		// 普通攻击
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		// 冲刺
+		EnhancedInputComponent->BindAction(PrimaryDashAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryDash);
+		// 必杀
+		EnhancedInputComponent->BindAction(PrimaryMustKillAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryMustKill);
 		// 交互物体
 		EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryInteract);
 	}
@@ -158,7 +162,41 @@ void ASCharacter::PrimaryAttack()
 // 普通攻击延时
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	SpawnProjectile(ProjectileClass);
+	SpawnProjectile(ProjectileBaseClass);
+}
+
+// 冲刺(目前冲刺逻辑是释放冲刺子弹，所以内容和普通攻击一样了。。)
+void ASCharacter::PrimaryDash()
+{
+	if (ensureAlways(AttackAnim))
+	{
+		PlayAnimMontage(AttackAnim); // 播放蒙太奇
+
+		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryDash_TimeElapsed, 0.2f); // 延时触发攻击
+		// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
+	}
+}
+// 冲刺延时
+void ASCharacter::PrimaryDash_TimeElapsed()
+{
+	SpawnProjectile(ProjectileDashClass);
+}
+
+// 必杀(目前必杀逻辑是释放黑洞，所以内容和普通攻击一样了。。)
+void ASCharacter::PrimaryMustKill()
+{
+	if (ensureAlways(AttackAnim))
+	{
+		PlayAnimMontage(AttackAnim); // 播放蒙太奇
+
+		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryMustKill_TimeElapsed, 0.2f); // 延时触发攻击
+		// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
+	}
+}
+// 必杀延时
+void ASCharacter::PrimaryMustKill_TimeElapsed()
+{
+	SpawnProjectile(ProjectileMustKillClass);
 }
 
 // 交互物体
@@ -214,6 +252,6 @@ void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 		SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParames.Instigator = this;
 		// 生成抛射物
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParames);
+		GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnTM, SpawnParames);
 	}
 }

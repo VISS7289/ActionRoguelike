@@ -38,17 +38,10 @@ void ASAICharacter::PostInitializeComponents()
 // 注意到玩家时，打印调试信息与设置黑板注意对象
 void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
-	// 获取AI控制器
-	AAIController* MyController = Cast<AAIController>(GetController());
-	if (MyController)
-	{
-		// 获取黑板
-		UBlackboardComponent* BBComp = MyController->GetBlackboardComponent();
-		// 设置目标
-		BBComp->SetValueAsObject("TargetActor", Pawn);
-		// 打印
-		DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::Green, 2.0f, true);
-	}
+	// 将注意到的对象设为攻击对象
+	SetTargetActor(Pawn);
+	// 打印
+	DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::Green, 2.0f, true);
 }
 
 // 生命值改变时
@@ -57,7 +50,13 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 	// 受击判断
 	if (Delta <= 0.0f)
 	{
-		
+		// 攻击对象是自己的话不能将自己设为攻击目标
+		if (InstigatordActor != this)
+		{
+			SetTargetActor(InstigatordActor);
+		}
+
+
 		// 死亡判断
 		if (NewHealth <= 0.0f)
 		{
@@ -67,11 +66,24 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 			{
 				AIC->GetBrainComponent()->StopLogic("Killed");
 			}
-
+			// 启用物理模拟（所有关节自由落体并相互之间模拟物理，达成死亡自动倒下的效果）
 			GetMesh()->SetAllBodiesSimulatePhysics(true);
 			GetMesh()->SetCollisionProfileName("Ragdoll");
-
+			// 10s后销毁自身
 			SetLifeSpan(10.0f);
 		}
+	}
+}
+
+// 设置攻击对象
+void ASAICharacter::SetTargetActor(AActor* NewTarget)
+{
+	// 获取AI控制器
+	AAIController* AIC = Cast<AAIController>(GetController());
+	if (AIC)
+	{
+		// 设置目标
+		AIC->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
+
 	}
 }

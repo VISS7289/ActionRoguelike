@@ -40,7 +40,7 @@ public:
 
 	// 生命值改变
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyHealthChange(float Delta);
+	bool ApplyHealthChange(AActor* InstigatordActor, float Delta);
 
 	// 生命值获取
 	float GetHealth();

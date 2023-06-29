@@ -50,7 +50,13 @@ protected:
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass; // 发射物
+	TSubclassOf<AActor> ProjectileBaseClass; // 发射物
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> ProjectileDashClass; // 冲刺发射物
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> ProjectileMustKillClass; // 必杀发射物
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim; // 普通攻击蒙太奇
@@ -82,6 +88,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryAttackAction;
 
+	// 冲刺
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryDashAction;
+
+	// 必杀
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryMustKillAction;
+
 	// 交互物体
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryInteractAction;
@@ -96,6 +110,16 @@ protected:
 	void PrimaryAttack();
 	// 延时攻击
 	void PrimaryAttack_TimeElapsed();
+
+	// 冲刺
+	void PrimaryDash();
+	// 冲刺延时
+	void PrimaryDash_TimeElapsed();
+
+	// 必杀
+	void PrimaryMustKill();
+	// 必杀延时
+	void PrimaryMustKill_TimeElapsed();
 
 	// 交互物体
 	void PrimaryInteract();
