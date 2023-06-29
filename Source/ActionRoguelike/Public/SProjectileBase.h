@@ -10,6 +10,7 @@ class USphereComponent; // 球
 class UProjectileMovementComponent; // 投射物移动组件
 class UParticleSystemComponent; // 粒子系统
 class UParticleSystem; // 粒子特效
+class UAudioComponent; // 音效组件
 
 UCLASS()
 class ACTIONROGUELIKE_API ASProjectileBase : public AActor
@@ -27,6 +28,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComp; // 球
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UAudioComponent* AudioComp; // 音效
 
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* MovementComp; // 投射物移动组件

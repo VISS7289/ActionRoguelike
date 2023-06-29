@@ -9,6 +9,7 @@
 #include "SAttributeComponent.h"
 #include "Curves/CurveFloat.h"
 #include "EngineUtils.h"
+#include "DrawDebugHelpers.h"
 
 
 ASGameModeBase::ASGameModeBase()
@@ -26,6 +27,37 @@ void ASGameModeBase::StartPlay()
 // 周期生成AI
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
+
+	// 限制生成数量
+	int32 NrOfAliveBots = 0;
+	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
+	{
+		// 查询当前存货敌人AI数量
+		ASAICharacter* Bot = *It;
+
+		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(Bot->GetComponentByClass(USAttributeComponent::StaticClass()));
+		if (AttributeComp && AttributeComp->IsAlive())
+		{
+			NrOfAliveBots++;
+		}
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Found %i Alive Bots."), NrOfAliveBots);
+
+	// 设置限制数量
+	float MaxBotCount = 10.0f;
+	// 如果存在难度曲线就根据难度曲线设置
+	if (DiffcultyCurve)
+	{
+		MaxBotCount = DiffcultyCurve->GetFloatValue(GetWorld()->TimeSeconds);
+	}
+
+	if (NrOfAliveBots >= MaxBotCount)
+	{
+		UE_LOG(LogTemp, Log, TEXT("At Maximum Bot Capacity. Skiping Bot Spawn."));
+		return;
+	}
+
 	UEnvQueryInstanceBlueprintWrapper* QureryInstance =  UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest25Pct, nullptr);
 	if (ensure(QureryInstance))
 	{
@@ -43,33 +75,6 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 		return;
 	}
 
-	// 限制生成数量
-	int32 NrOfAliveBots = 0;
-	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
-	{
-		// 查询当前存货敌人AI数量
-		ASAICharacter* Bot = *It;
-
-		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(Bot->GetComponentByClass(USAttributeComponent::StaticClass()));
-		if (AttributeComp && AttributeComp->IsAlive())
-		{
-			NrOfAliveBots++;
-		}
-	}
-
-	// 设置限制数量
-	float MaxBotCount = 10.0f;
-	// 如果存在难度曲线就根据难度曲线设置
-	if (DiffcultyCurve)
-	{
-		MaxBotCount = DiffcultyCurve->GetFloatValue(GetWorld()->TimeSeconds);
-	}
-
-	if (NrOfAliveBots >= MaxBotCount)
-	{
-		return;
-	}
-
 	// 生成敌人AI
 	TArray<FVector> Locations = QueryInstance->GetResultsAsLocations();
 	// 设置生成物规则
@@ -80,5 +85,7 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 	{
 		FVector DeltaH = FVector(0, 0, 100);
 		AActor* NewBot = GetWorld()->SpawnActor<AActor>(MinionClass, Locations[0]+ DeltaH, FRotator::ZeroRotator);
+
+		DrawDebugSphere(GetWorld(), Locations[0] + DeltaH, 50.0f, 32, FColor::Green, false, 60.0f); // Debug球
 	}
 }

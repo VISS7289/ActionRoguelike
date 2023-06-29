@@ -3,12 +3,14 @@
 
 #include "SProjectileBase.h"
 #include "Components/SphereComponent.h"
+#include "Components/PrimitiveComponent.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
-#include "Components/PrimitiveComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "SAttributeComponent.h"
+
 
 
 // Sets default values
@@ -22,9 +24,12 @@ ASProjectileBase::ASProjectileBase()
 	// 添加球体组件
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	RootComponent = SphereComp;
+	// 添加音效组件
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
+	AudioComp->SetupAttachment(RootComponent);
 	// 添加粒子系统
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
-	EffectComp->SetupAttachment(SphereComp);
+	EffectComp->SetupAttachment(RootComponent);
 	// 添加投射物移动组件
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
 	MovementComp->InitialSpeed = 1000.0f;

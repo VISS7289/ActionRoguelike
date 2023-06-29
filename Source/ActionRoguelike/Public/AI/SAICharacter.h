@@ -7,7 +7,8 @@
 #include "SAICharacter.generated.h"
 
 
-class UPawnSensingComponent;
+class UPawnSensingComponent; // 环境感知组件
+class USAttributeComponent; // 属性组件
 
 
 UCLASS()
@@ -25,10 +26,17 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
-	UPawnSensingComponent* PawnSensingComponent; // 注意力组件
+	UPawnSensingComponent* PawnSensingComponent; // 环境感知组件
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USAttributeComponent* AttributeComp; // 属性组件
 
 	// 注意到玩家时，打印调试信息与设置黑板注意对象
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
+
+	// 生命值改变时
+	UFUNCTION()
+	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 };

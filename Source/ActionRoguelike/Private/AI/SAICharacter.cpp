@@ -6,6 +6,9 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "DrawDebugHelpers.h"
+#include "SAttributeComponent.h"
+#include "BrainComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 
 // Sets default values
@@ -14,7 +17,10 @@ ASAICharacter::ASAICharacter()
 
 	// 设置环境感知组件
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
+	// 添加属性组件
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 
+	// 放置或生成时自动添加AI控制器
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 }
@@ -23,8 +29,10 @@ ASAICharacter::ASAICharacter()
 void ASAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
+	// 看到玩家时设置注意对象
 	PawnSensingComponent->OnSeePawn.AddDynamic(this, &ASAICharacter::OnPawnSeen);
+	// 生命值改变时
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASAICharacter::GetHealthChange);
 }
 
 // 注意到玩家时，打印调试信息与设置黑板注意对象
@@ -43,3 +51,27 @@ void ASAICharacter::OnPawnSeen(APawn* Pawn)
 	}
 }
 
+// 生命值改变时
+void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
+{
+	// 受击判断
+	if (Delta <= 0.0f)
+	{
+		
+		// 死亡判断
+		if (NewHealth <= 0.0f)
+		{
+			// 停止行为树
+			AAIController* AIC = Cast<AAIController>(GetController());
+			if (AIC)
+			{
+				AIC->GetBrainComponent()->StopLogic("Killed");
+			}
+
+			GetMesh()->SetAllBodiesSimulatePhysics(true);
+			GetMesh()->SetCollisionProfileName("Ragdoll");
+
+			SetLifeSpan(10.0f);
+		}
+	}
+}
