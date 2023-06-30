@@ -9,6 +9,8 @@
 #include "SAttributeComponent.h"
 #include "BrainComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "UI/SWorldUserWidget.h"
 
 
 // Sets default values
@@ -56,6 +58,18 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 
 		// 材质闪烁（已经设置好了，只需要TimeToHit与游戏时间相同，就会闪烁1s）
 		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
+		// 添加UI（为什么不在begin play做）
+		if (ActiveHealthBar == nullptr)
+		{
+			ActiveHealthBar = CreateWidget<USWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+			ActiveHealthBar->AttacheActor = this;
+			if (ActiveHealthBar)
+			{
+				ActiveHealthBar->AddToViewport();
+			}
+		}
+		
+
 
 		// 攻击对象是自己的话不能将自己设为攻击目标
 		if (InstigatordActor != this)

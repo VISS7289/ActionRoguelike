@@ -9,7 +9,8 @@
 
 class UPawnSensingComponent; // 环境感知组件
 class USAttributeComponent; // 属性组件
-
+class UUserWidget; // UI
+class USWorldUserWidget; // AI血条UI
 
 UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
@@ -21,6 +22,11 @@ public:
 	ASAICharacter();
 
 protected:
+
+	USWorldUserWidget* ActiveHealthBar;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	FName TimeToHitParamName; // 受击闪烁材质参数名称
