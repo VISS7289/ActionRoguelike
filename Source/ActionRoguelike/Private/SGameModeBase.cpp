@@ -35,7 +35,7 @@ void ASGameModeBase::SpawnBotTimerElapsed()
 		// 查询当前存货敌人AI数量
 		ASAICharacter* Bot = *It;
 
-		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(Bot->GetComponentByClass(USAttributeComponent::StaticClass()));
+		USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(Bot);
 		if (AttributeComp && AttributeComp->IsAlive())
 		{
 			NrOfAliveBots++;

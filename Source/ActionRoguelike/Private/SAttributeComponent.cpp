@@ -48,3 +48,25 @@ bool USAttributeComponent::IsFullHealth() const
 {
 	return Health == HealthMax;
 }
+
+// 返回Actor上的USAttributeComponent
+USAttributeComponent* USAttributeComponent::GetAttributes(AActor* FromActor)
+{
+	if (FromActor)
+	{
+		return Cast<USAttributeComponent>(FromActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	}
+
+	return nullptr;
+}
+
+// 判断Actor是否活着
+bool USAttributeComponent::IsActorAlive(AActor* FromActor)
+{
+	USAttributeComponent* AttributeComp = GetAttributes(FromActor);
+	if (AttributeComp)
+	{
+		return AttributeComp->IsAlive();
+	}
+	return false;
+}

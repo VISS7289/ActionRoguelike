@@ -7,10 +7,18 @@
 #include "GameFramework/Actor.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Engine/World.h"
+#include "SAttributeComponent.h"
 
 
 
+USBTTaskRangeAttack::USBTTaskRangeAttack()
+{
+	MaxBulleSpread = 8.0f;
+}
 
+
+
+// 执行攻击
 EBTNodeResult::Type USBTTaskRangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	// 获取AIController
@@ -32,13 +40,25 @@ EBTNodeResult::Type USBTTaskRangeAttack::ExecuteTask(UBehaviorTreeComponent& Own
 		{
 			return EBTNodeResult::Failed;
 		}
+
+		// 攻击对象应该活着
+		if (!USAttributeComponent::IsActorAlive(TargetActor))
+		{
+			return EBTNodeResult::Failed;
+		}
+
 		// 设置子弹攻击朝向，指向目标现在所处位置
 		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
 		FRotator MuzzleRotator = Direction.Rotation();
+		// 添加一些扰动
+		MuzzleRotator.Pitch += FMath::RandRange(0.0f, MaxBulleSpread);
+		MuzzleRotator.Yaw += FMath::RandRange(-MaxBulleSpread, MaxBulleSpread);
+
 		// 设置生成抛射物的碰撞信息与抛射物所有者信息
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		Params.Instigator = AICharacter;
+
 		// 生成抛射物
 		AActor* NewProj = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MuzzleRotator, Params);
 		// 返回生成结果

@@ -16,10 +16,17 @@ class ACTIONROGUELIKE_API USBTTaskRangeAttack : public UBTTaskNode
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float MaxBulleSpread;
+
 	// 重载执行函数
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass; // 发射物
+
+public:
+
+	USBTTaskRangeAttack();
 	
 };
