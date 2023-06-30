@@ -30,6 +30,10 @@ public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
+	// 治疗自身的控制台命令
+	UFUNCTION(Exec)
+	void HealSelf(float Amount = 100.0f);
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)

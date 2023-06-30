@@ -26,6 +26,10 @@ public:
 
 	virtual void StartPlay() override;
 
+	// …±À¿À˘”–AI
+	UFUNCTION(Exec)
+	void KillAll();
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")

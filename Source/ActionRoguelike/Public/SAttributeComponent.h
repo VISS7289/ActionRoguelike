@@ -25,6 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes", meta=(DisplayName = "IsAlive"))
 	static bool IsActorAlive(AActor* FromActor);
 
+	// …±À¿◊‘…Ì
+	UFUNCTION(BlueprintCallable)
+	bool Kill(AActor* InstigatordActor);
+
 	// Sets default values for this component's properties
 	USAttributeComponent();
 

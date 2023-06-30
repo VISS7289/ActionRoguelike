@@ -107,6 +107,12 @@ void ASCharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent
 	}
 }
 
+// 治疗自身的控制台命令
+void ASCharacter::HealSelf(float Amount /* 100.0f */)
+{
+	AttributeComp->ApplyHealthChange(this, Amount);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 角色输入
 

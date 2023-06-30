@@ -10,6 +10,11 @@ USAttributeComponent::USAttributeComponent()
 	HealthMax = 100;
 }
 
+// 杀死自身
+bool USAttributeComponent::Kill(AActor* InstigatordActor)
+{
+	return ApplyHealthChange(InstigatordActor, -GetHealthMax());
+}
 
 // 生命值改变
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Delta)

@@ -24,6 +24,23 @@ void ASGameModeBase::StartPlay()
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimeInterval, true);
 }
 
+// 杀死所有AI
+void ASGameModeBase::KillAll()
+{
+	// 查询当前AI
+	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
+	{
+		// 如果有属性组件，调用属性组件的自杀
+		ASAICharacter* Bot = *It;
+
+		USAttributeComponent* AttributeComp = USAttributeComponent::GetAttributes(Bot);
+		if (AttributeComp && AttributeComp->IsAlive())
+		{
+			AttributeComp->Kill(this); 
+		}
+	}
+}
+
 // 周期生成AI
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
