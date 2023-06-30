@@ -23,6 +23,9 @@ ASAICharacter::ASAICharacter()
 	// 放置或生成时自动添加AI控制器
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
+	// 受击闪烁材质参数名称
+	TimeToHitParamName = "TimeToHit";
+
 }
 
 // 注册事件回调函数
@@ -50,12 +53,15 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 	// 受击判断
 	if (Delta <= 0.0f)
 	{
+
+		// 材质闪烁（已经设置好了，只需要TimeToHit与游戏时间相同，就会闪烁1s）
+		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
+
 		// 攻击对象是自己的话不能将自己设为攻击目标
 		if (InstigatordActor != this)
 		{
 			SetTargetActor(InstigatordActor);
 		}
-
 
 		// 死亡判断
 		if (NewHealth <= 0.0f)

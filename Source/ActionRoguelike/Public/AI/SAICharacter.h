@@ -22,6 +22,9 @@ public:
 
 protected:
 
+	UPROPERTY(VisibleAnywhere, Category = "Effect")
+	FName TimeToHitParamName; // 受击闪烁材质参数名称
+
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UPawnSensingComponent* PawnSensingComponent; // 环境感知组件
 
