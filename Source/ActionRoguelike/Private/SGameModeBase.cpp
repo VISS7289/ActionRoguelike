@@ -10,7 +10,10 @@
 #include "Curves/CurveFloat.h"
 #include "EngineUtils.h"
 #include "DrawDebugHelpers.h"
+#include "SCharacter.h"
 
+// 是否生成敌人AI作弊代码
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enable Spawning Bots Via Timer."), ECVF_Cheat);
 
 ASGameModeBase::ASGameModeBase()
 {
@@ -22,6 +25,36 @@ void ASGameModeBase::StartPlay()
 	Super::StartPlay();
 	// 每隔一段时间就重新生成AI
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimeInterval, true);
+}
+
+// 死亡处理
+// 如果死亡的是玩家，则在2s后复活
+void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
+{
+	ASCharacter* Player = Cast<ASCharacter>(VictimActor);
+	if (Player)
+	{
+		FTimerHandle TimerHandle_RespawnDelay;
+
+		FTimerDelegate Delegate;
+		Delegate.BindUFunction(this, "RespawnPlayer", Player->GetController());
+
+		float RespawnDelay = 2.0f;
+		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("OnActorKilled：VictimActor：%s，Killer：%s"), *GetNameSafe(VictimActor), *GetNameSafe(Killer));
+}
+
+// 重新生成玩家
+void ASGameModeBase::RespawnPlayer(AController* Controller)
+{
+	if (ensure(Controller))
+	{
+		Controller->UnPossess();
+
+		RestartPlayer(Controller);
+	}
 }
 
 // 杀死所有AI
@@ -44,6 +77,12 @@ void ASGameModeBase::KillAll()
 // 周期生成AI
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
+
+	if (!CVarSpawnBots.GetValueOnGameThread())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Bot Spawn Disabled via 'CVarSpawnBots'."));
+		return;
+	}
 
 	// 限制生成数量
 	int32 NrOfAliveBots = 0;

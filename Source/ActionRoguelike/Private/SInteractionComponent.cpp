@@ -11,6 +11,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Actor.h"
 
+// 交互Debug显示
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.DebugDrawInteraction"), true, TEXT("Enable Debug Line For Interact Component."), ECVF_Cheat);
 
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
@@ -44,6 +46,9 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 // 1次交互
 void USInteractionComponent::PrimaryInteract()
 {
+	
+	bool bDrawDebug = CVarDebugDrawInteraction.GetValueOnGameThread();
+
 	// 设置碰撞检测物体
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
@@ -93,14 +98,21 @@ void USInteractionComponent::PrimaryInteract()
 				APawn* MyPawn = Cast<APawn>(MyOwner); // 传入Pawn
 				ISGmeplayInterface::Execute_Interact(HitActor, MyPawn); // 调用接口
 				// Debug并退出，因为只希望触发依次
-				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, HitColor, false, 2.0f); // Debug球
+				if (bDrawDebug)
+				{
+					DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, HitColor, false, 2.0f); // Debug球
+				}
+				
 				break;
 			}
 		}
 		
 	}
-	
-	DrawDebugLine(GetWorld(), Start, End, HitColor, false, 2.0f, 0, 2.0f); // Debug线
+
+	if (bDrawDebug)
+	{
+		DrawDebugLine(GetWorld(), Start, End, HitColor, false, 2.0f, 0, 2.0f); // Debug线
+	}
 
 }
 

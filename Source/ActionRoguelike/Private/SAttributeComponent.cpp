@@ -2,6 +2,10 @@
 
 
 #include "SAttributeComponent.h"
+#include "SGameModeBase.h"
+
+// 伤害倍乘作弊代码
+static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultiplier"), 1.0f, TEXT("Global Damage Modifier For Attribute Component."), ECVF_Cheat);
 
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
@@ -17,16 +21,31 @@ bool USAttributeComponent::Kill(AActor* InstigatordActor)
 }
 
 // 生命值改变
+// 根据变化量Delta与作弊信息CVarDamageMultiplier更新生命值，并对死亡进行处理。在处理时会广播OnHealthChanged。
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Delta)
 {
-	// 记录过去生命并加血
-	float OldHealth = Health; 
+
+	if (Delta < 0.0f)
+	{
+		Delta *= CVarDamageMultiplier.GetValueOnGameThread();
+	}
+
+	float OldHealth = Health; // 过去生命值
 	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
-	// 计算变化量
-	float ActualDelta = Health - OldHealth;
-	// 触发生命值改变事件
+	float ActualDelta = Health - OldHealth; // 实际变化量
 	OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
-	// 返回结果
+
+
+	if (Delta < 0.0f && Health <= 0.0f)
+	{
+		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
+		if (GM)
+		{
+			GM->OnActorKilled(GetOwner(), InstigatordActor);
+		}
+		
+	}
+
 	return ActualDelta != 0;
 }
 

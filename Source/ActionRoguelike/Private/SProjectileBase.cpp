@@ -10,6 +10,7 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "SAttributeComponent.h"
+#include "SGameplayFunctionLibrary.h"
 
 
 
@@ -19,7 +20,7 @@ ASProjectileBase::ASProjectileBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	DestoryPrjDelay = 10.0f; // 最多存在10s
-	Damage = -20.0f; // 默认伤害20
+	Damage = 20.0f; // 默认伤害20
 
 	// 添加球体组件
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
@@ -70,12 +71,15 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 {
 	if (ensureAlways(HitEffect) && OtherActor != GetInstigator())
 	{
-		DrawDebugSphere(GetWorld(), GetActorLocation(), 10.0f, 32, FColor::Green, false, 2.0f); // Debug球
-		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		if (AttributeComp)
-		{
-			AttributeComp->ApplyHealthChange(GetInstigator(), Damage);
-		}
+		//DrawDebugSphere(GetWorld(), GetActorLocation(), 10.0f, 32, FColor::Green, false, 2.0f); // Debug球
+		//USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		//if (AttributeComp)
+		//{
+		//	AttributeComp->ApplyHealthChange(GetInstigator(), Damage);
+		//}
+		//Explode();
+
+		USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, Hit);
 		Explode();
 	}
 }

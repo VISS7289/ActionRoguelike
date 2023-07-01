@@ -26,6 +26,9 @@ public:
 
 	virtual void StartPlay() override;
 
+	// 死亡处理
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
+
 	// 杀死所有AI
 	UFUNCTION(Exec)
 	void KillAll();
@@ -48,6 +51,9 @@ protected:
 
 	UFUNCTION()
 	void SpawnBotTimerElapsed(); // 周期生成AI
+
+	UFUNCTION()
+	void RespawnPlayer(AController* Controller); // 重新生成玩家
 
 	// EQS生成后生成AI
 	UFUNCTION()
