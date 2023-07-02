@@ -32,6 +32,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Action")
+	TArray<TSubclassOf<USAction>> DefaultActions;
+
 	TArray<USAction*> Actions; // 所有行动
 
 	// Called when the game starts

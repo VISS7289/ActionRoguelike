@@ -35,6 +35,9 @@ public:
 	UFUNCTION(Exec)
 	void HealSelf(float Amount = 100.0f);
 
+	// 获取相机位置与旋转
+	virtual FVector GetPawnViewLocation() const override;
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)
@@ -54,24 +57,6 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-protected:
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileBaseClass; // 发射物
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileDashClass; // 冲刺发射物
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileMustKillClass; // 必杀发射物
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnim; // 普通攻击蒙太奇
-
-	FTimerHandle TimerHandle_PrimaryAttack; // 延时
-
-	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 
 
 // 输入相关
@@ -122,13 +107,9 @@ protected:
 
 	// 普通攻击
 	void PrimaryAttack();
-	// 延时攻击
-	void PrimaryAttack_TimeElapsed();
 
 	// 冲刺
 	void PrimaryDash();
-	// 冲刺延时
-	void PrimaryDash_TimeElapsed();
 
 	// 加速开始
 	void PrimarySprintStart();
@@ -137,8 +118,6 @@ protected:
 
 	// 必杀
 	void PrimaryMustKill();
-	// 必杀延时
-	void PrimaryMustKill_TimeElapsed();
 
 	// 交互物体
 	void PrimaryInteract();

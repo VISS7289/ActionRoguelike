@@ -120,6 +120,12 @@ void ASCharacter::HealSelf(float Amount /* 100.0f */)
 	AttributeComp->ApplyHealthChange(this, Amount);
 }
 
+// 获取相机位置与旋转
+FVector ASCharacter::GetPawnViewLocation() const
+{
+	return CameraComp->GetComponentLocation();
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 角色输入
 
@@ -164,35 +170,14 @@ void ASCharacter::Look(const FInputActionValue& Value)
 // 普通攻击
 void ASCharacter::PrimaryAttack()
 {
-	if (ensureAlways(AttackAnim))
-	{
-		PlayAnimMontage(AttackAnim); // 播放蒙太奇
 
-		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f); // 延时触发攻击
-		// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
-	}
-}
-// 普通攻击延时
-void ASCharacter::PrimaryAttack_TimeElapsed()
-{
-	SpawnProjectile(ProjectileBaseClass);
+	ActionComp->StartActionByName(this, "PrimaryAttack");
 }
 
 // 冲刺(目前冲刺逻辑是释放冲刺子弹，所以内容和普通攻击一样了。。)
 void ASCharacter::PrimaryDash()
 {
-	if (ensureAlways(AttackAnim))
-	{
-		PlayAnimMontage(AttackAnim); // 播放蒙太奇
-
-		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryDash_TimeElapsed, 0.2f); // 延时触发攻击
-		// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
-	}
-}
-// 冲刺延时
-void ASCharacter::PrimaryDash_TimeElapsed()
-{
-	SpawnProjectile(ProjectileDashClass);
+	ActionComp->StartActionByName(this, "PrimaryDash");
 }
 
 // 加速开始
@@ -214,18 +199,7 @@ void ASCharacter::PrimarySprintEnd()
 // 必杀(目前必杀逻辑是释放黑洞，所以内容和普通攻击一样了。。)
 void ASCharacter::PrimaryMustKill()
 {
-	if (ensureAlways(AttackAnim))
-	{
-		PlayAnimMontage(AttackAnim); // 播放蒙太奇
-
-		GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryMustKill_TimeElapsed, 0.2f); // 延时触发攻击
-		// GetWorldTimerManager.ClearTimer(TimerHandle_PrimaryAttack);
-	}
-}
-// 必杀延时
-void ASCharacter::PrimaryMustKill_TimeElapsed()
-{
-	SpawnProjectile(ProjectileMustKillClass);
+	ActionComp->StartActionByName(this, "PrimaryMustKill");
 }
 
 // 交互物体
@@ -237,50 +211,4 @@ void ASCharacter::PrimaryInteract()
 		InteractionComp->PrimaryInteract();
 	}
 	
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 工具函数
-
-void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
-{
-	if (ensureAlways(ClassToSpawn))
-	{
-		// 左手位置
-		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_02");
-		
-		// 胶囊检测体设置
-		FCollisionShape Shape;
-		Shape.SetSphere(20.0f);
-		// 设置碰撞
-		FCollisionQueryParams Params;
-		Params.AddIgnoredActor(this);
-		// 设置检测物
-		FCollisionObjectQueryParams ObjParams;
-		ObjParams.AddObjectTypesToQuery(ECC_WorldStatic);
-		ObjParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-		ObjParams.AddObjectTypesToQuery(ECC_Pawn);
-		// 设置起点，相机
-		FVector TraceStart = CameraComp->GetComponentLocation();
-		// 设置终点，相机到屏幕中间第一个触碰到的物体
-		FVector TraceEnd = CameraComp->GetComponentLocation() + (CameraComp->GetComponentRotation().Vector() * 5000);
-		// 胶囊检测
-		FHitResult Hit;
-		if (GetWorld()->SweepSingleByObjectType(Hit, TraceStart, TraceEnd, FQuat::Identity, ObjParams, Shape, Params))
-		{
-			TraceEnd = Hit.ImpactPoint;
-		}
-		// 根据检测结果计算旋转方向
-		FRotator ProjRotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
-
-
-		// 角色前向位置
-		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
-		// 设置生成物规则
-		FActorSpawnParameters SpawnParames;
-		SpawnParames.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParames.Instigator = this;
-		// 生成抛射物
-		GetWorld()->SpawnActor<AActor>(ClassToSpawn, SpawnTM, SpawnParames);
-	}
 }
