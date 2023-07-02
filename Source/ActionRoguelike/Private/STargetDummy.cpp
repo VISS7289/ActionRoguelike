@@ -3,7 +3,7 @@
 
 #include "STargetDummy.h"
 #include "Components/StaticMeshComponent.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 
 // Sets default values
 ASTargetDummy::ASTargetDummy()

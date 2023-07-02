@@ -2,7 +2,7 @@
 
 
 #include "SGameplayFunctionLibrary.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 #include "Components/PrimitiveComponent.h"
 
 // ‘Ï≥……À∫¶∫Ø ˝
@@ -10,7 +10,7 @@
 bool USGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
 	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(TargetActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-	if (ensure(AttributeComp))
+	if (AttributeComp)
 	{
 		return AttributeComp->ApplyHealthChange(DamageCauser, -DamageAmount);
 	}

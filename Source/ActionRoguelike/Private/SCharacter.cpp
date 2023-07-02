@@ -11,9 +11,10 @@
 #include "Math/TransformNonVectorized.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
-#include "SInteractionComponent.h"
 #include "Animation/AnimMontage.h"
-#include "SAttributeComponent.h"
+#include "Component/SInteractionComponent.h"
+#include "Component/SAttributeComponent.h"
+#include "Component/SActionComponent.h"
 #include "CollisionShape.h"
 #include "CollisionQueryParams.h"
 
@@ -35,6 +36,8 @@ ASCharacter::ASCharacter()
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 	// 添加属性组件
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+	// 添加行动组件
+	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝运动方向旋转
 	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转
@@ -88,6 +91,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 		// 冲刺
 		EnhancedInputComponent->BindAction(PrimaryDashAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryDash);
+		// 加速开始
+		EnhancedInputComponent->BindAction(PrimarySprintDown, ETriggerEvent::Started, this, &ASCharacter::PrimarySprintStart);
+		// 加速结束
+		EnhancedInputComponent->BindAction(PrimarySprintRelease, ETriggerEvent::Triggered, this, &ASCharacter::PrimarySprintEnd);
 		// 必杀
 		EnhancedInputComponent->BindAction(PrimaryMustKillAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryMustKill);
 		// 交互物体
@@ -186,6 +193,22 @@ void ASCharacter::PrimaryDash()
 void ASCharacter::PrimaryDash_TimeElapsed()
 {
 	SpawnProjectile(ProjectileDashClass);
+}
+
+// 加速开始
+// 开启行动组件中Sprint行动
+void ASCharacter::PrimarySprintStart()
+{
+	UE_LOG(LogTemp, Log, TEXT("Sprint Start"));
+	ActionComp->StartActionByName(this, "Sprint");
+}
+
+// 加速结束
+// 结束行动组件中Sprint行动
+void ASCharacter::PrimarySprintEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Sprint End"));
+	ActionComp->StopActionByName(this, "Sprint");
 }
 
 // 必杀(目前必杀逻辑是释放黑洞，所以内容和普通攻击一样了。。)

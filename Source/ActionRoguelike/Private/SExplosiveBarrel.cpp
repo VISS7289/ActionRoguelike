@@ -5,7 +5,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "DrawDebugHelpers.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 
 // Sets default values
 ASExplosiveBarrel::ASExplosiveBarrel()

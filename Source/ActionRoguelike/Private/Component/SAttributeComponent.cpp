@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 #include "SGameModeBase.h"
 
 // 伤害倍乘作弊代码
@@ -34,7 +34,6 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Del
 	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 	float ActualDelta = Health - OldHealth; // 实际变化量
 	OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
-
 
 	if (Delta < 0.0f && Health <= 0.0f)
 	{

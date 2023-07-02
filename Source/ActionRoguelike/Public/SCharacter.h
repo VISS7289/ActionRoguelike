@@ -12,6 +12,7 @@ class USpringArmComponent; // 弹簧臂组件
 class UCameraComponent; // 摄像机组件
 class USInteractionComponent; // 交互组件
 class USAttributeComponent; // 属性组件
+class USActionComponent; // 行动组件
 
 class UAnimMontage; // 动画蒙太奇
 
@@ -47,6 +48,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Component")
 	USAttributeComponent* AttributeComp; // 属性组件
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USActionComponent* ActionComp; // 行动组件
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -96,6 +100,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryDashAction;
 
+	// 加速
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimarySprintDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimarySprintRelease;
+
 	// 必杀
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryMustKillAction;
@@ -119,6 +129,11 @@ protected:
 	void PrimaryDash();
 	// 冲刺延时
 	void PrimaryDash_TimeElapsed();
+
+	// 加速开始
+	void PrimarySprintStart();
+	// 加速结束
+	void PrimarySprintEnd();
 
 	// 必杀
 	void PrimaryMustKill();

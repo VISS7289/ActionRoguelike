@@ -6,7 +6,7 @@
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
 #include "GameFramework/Actor.h"
 #include "AI/SAICharacter.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 #include "Curves/CurveFloat.h"
 #include "EngineUtils.h"
 #include "DrawDebugHelpers.h"

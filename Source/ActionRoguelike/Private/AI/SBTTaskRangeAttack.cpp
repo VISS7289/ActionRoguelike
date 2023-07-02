@@ -7,7 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Engine/World.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 
 
 

@@ -9,7 +9,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 #include "SGameplayFunctionLibrary.h"
 
 

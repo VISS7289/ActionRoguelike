@@ -2,7 +2,7 @@
 
 
 #include "SPowerup_HealthPotion.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 
 void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {

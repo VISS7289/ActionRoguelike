@@ -6,11 +6,13 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "DrawDebugHelpers.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 #include "BrainComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/SWorldUserWidget.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -89,6 +91,9 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 			// 启用物理模拟（所有关节自由落体并相互之间模拟物理，达成死亡自动倒下的效果）
 			GetMesh()->SetAllBodiesSimulatePhysics(true);
 			GetMesh()->SetCollisionProfileName("Ragdoll");
+			// 取消胶囊体碰撞
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetCharacterMovement()->DisableMovement();
 			// 10s后销毁自身
 			SetLifeSpan(10.0f);
 		}

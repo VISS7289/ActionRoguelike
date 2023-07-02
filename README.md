@@ -2,6 +2,8 @@
 * SCharacter 玩家角色类
   * SInteractionComponent 玩家交互组件 S--SGmeplayInterface 游戏接口类
   * SAttributeComponent 玩家属性组件
+  * SActionComponent 玩家行动组件
+* SAction 玩家行动基类
 * SHealthWidget 玩家生命UI
 * SWorldUserWidget 敌人血条UI（后期仿玩家生命UI用C++完全实现）
 * SHealthWidget 伤害数字UI（目前里面没东西，没搞明白C++的UCanvasPanel）

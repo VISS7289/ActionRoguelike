@@ -2,7 +2,7 @@
 
 
 #include "SHealthWidget.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 #include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
 #include "Materials/MaterialInstanceDynamic.h"

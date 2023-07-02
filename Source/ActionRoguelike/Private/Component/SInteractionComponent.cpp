@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SInteractionComponent.h"
+#include "Component/SInteractionComponent.h"
 #include "Engine/EngineTypes.h"
 #include "CollisionQueryParams.h"
 #include "SGmeplayInterface.h"

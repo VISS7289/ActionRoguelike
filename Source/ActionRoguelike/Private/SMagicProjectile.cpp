@@ -8,7 +8,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()

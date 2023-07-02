@@ -3,7 +3,7 @@
 
 #include "AI/SBTTask_HealSelf.h"
 #include "AIController.h"
-#include "SAttributeComponent.h"
+#include "Component/SAttributeComponent.h"
 
 
 
