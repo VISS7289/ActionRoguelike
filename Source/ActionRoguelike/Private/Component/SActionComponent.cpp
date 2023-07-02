@@ -33,7 +33,8 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	FString DebugMsg = GetNameSafe(GetOwner()) + " : " + ActiveGameplayTags.ToStringSimple();
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, DebugMsg);
 }
 
 // 添加行动
@@ -54,30 +55,47 @@ void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
 }
 
 // 启动行动
-// 遍历所有可用行动，根据行动名称执行对应行动
+// 遍历所有可用行动，根据行动名称执行对应行动，并且根据标签类型判断是否可以执行
 bool USActionComponent::StartActionByName(AActor* InstigatorActor, FName ActionName)
 {
 	for (USAction* Action : Actions)
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			Action->StartAction(InstigatorActor);
-			return true;
+			if (Action->CanStart(InstigatorActor))
+			{
+				Action->StartAction(InstigatorActor);
+				return true;
+			}
+			else
+			{
+				FString DebugMsg = FString::Printf(TEXT("Failed To Run: %s"), *ActionName.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, DebugMsg);
+			}
 		}
 	}
 	return false;
 }
 
 // 结束行动
-// 遍历所有可用行动，根据行动名称结束对应行动
+// 遍历所有可用行动，根据行动名称结束对应行动，并且根据运行状态判断是否可以执行
 bool USActionComponent::StopActionByName(AActor* InstigatorActor, FName ActionName)
 {
 	for (USAction* Action : Actions)
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			Action->StopAction(InstigatorActor);
-			return true;
+			if (Action->IsRunning())
+			{
+				Action->StopAction(InstigatorActor);
+				return true;
+			}
+			else
+			{
+				FString DebugMsg = FString::Printf(TEXT("Failed To Stop: %s"), *ActionName.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, DebugMsg);
+			}
+			
 		}
 	}
 	return false;
