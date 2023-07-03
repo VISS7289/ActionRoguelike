@@ -47,6 +47,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSubclassOf<AActor> MinionClass; // 生成的AI
 
+	UPROPERTY(EditAnywhere)
+	int32 CreditsPerKill; // 击杀AI增加的积分量
+
 	FTimerHandle TimerHandle_SpawnBots; // 生成AI计时器
 
 	UFUNCTION()

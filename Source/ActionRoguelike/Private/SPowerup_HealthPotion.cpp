@@ -3,6 +3,12 @@
 
 #include "SPowerup_HealthPotion.h"
 #include "Component/SAttributeComponent.h"
+#include "SPlayerState.h"
+
+ASPowerup_HealthPotion::ASPowerup_HealthPotion()
+{
+	CreditCost = 50;
+}
 
 void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
@@ -17,11 +23,15 @@ void ASPowerup_HealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	// 存在属性组件且非满血
 	if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
 	{
-		// 加血成功就进入冷却
-		if (AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+		if (ASPlayerState* PS = InstigatorPawn->GetPlayerState<ASPlayerState>())
 		{
-			HideAndCooldownPowerup();
+			// 加血成功就进入冷却
+			if (PS->RemoveCredits(CreditCost) && AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+			{
+				HideAndCooldownPowerup();
+			}
 		}
+		
 	}
 
 }

@@ -11,6 +11,7 @@
 #include "EngineUtils.h"
 #include "DrawDebugHelpers.h"
 #include "SCharacter.h"
+#include "SPlayerState.h"
 
 // 是否生成敌人AI作弊代码
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enable Spawning Bots Via Timer."), ECVF_Cheat);
@@ -18,6 +19,9 @@ static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT
 ASGameModeBase::ASGameModeBase()
 {
 	SpawnTimeInterval = 2.0f;
+	CreditsPerKill = 100;
+
+	PlayerStateClass = ASPlayerState::StaticClass();
 }
 
 void ASGameModeBase::StartPlay()
@@ -28,7 +32,7 @@ void ASGameModeBase::StartPlay()
 }
 
 // 死亡处理
-// 如果死亡的是玩家，则在2s后复活
+// 如果死亡的是玩家，则在2s后复活。如果死亡的是AI，则增加积分
 void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
 	ASCharacter* Player = Cast<ASCharacter>(VictimActor);
@@ -41,6 +45,18 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 
 		float RespawnDelay = 2.0f;
 		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
+	}
+
+	APawn* KillerPawn = Cast<APawn>(Killer);
+	if (KillerPawn)
+	{
+		ASPlayerState* PS = KillerPawn->GetPlayerState<ASPlayerState>();
+		if (PS)
+		{
+			PS->AddCredits(CreditsPerKill);
+
+			UE_LOG(LogTemp, Log, TEXT("NewCredits：%d"), PS->GetCredits());
+		}
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("OnActorKilled：VictimActor：%s，Killer：%s"), *GetNameSafe(VictimActor), *GetNameSafe(Killer));
