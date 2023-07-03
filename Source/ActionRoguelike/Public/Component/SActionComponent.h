@@ -22,7 +22,11 @@ public:
 
 	// 添加行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	void AddAction(TSubclassOf<USAction> ActionClass);
+	void AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass);
+
+	// 移除行动
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void RemoveAction(USAction* ActionToRemove);
 
 	// 启动行动
 	UFUNCTION(BlueprintCallable, Category = "Action")

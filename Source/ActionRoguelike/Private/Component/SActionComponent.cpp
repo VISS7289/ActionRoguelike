@@ -22,7 +22,7 @@ void USActionComponent::BeginPlay()
 
 	for (TSubclassOf<USAction> ActionClass : DefaultActions)
 	{
-		AddAction(ActionClass);
+		AddAction(GetOwner(), ActionClass);
 	}
 	
 }
@@ -39,7 +39,7 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 // 添加行动
 // 根据类引用来添加具体的行动
-void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
+void USActionComponent::AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass)
 {
 	if (!ensure(ActionClass))
 	{
@@ -50,8 +50,23 @@ void USActionComponent::AddAction(TSubclassOf<USAction> ActionClass)
 	if (ensure(NewAction))
 	{
 		Actions.Add(NewAction);
+
+		if (NewAction->bAutoStart && ensure(NewAction->CanStart(InstigatorActor)))
+		{
+			NewAction->StartAction(InstigatorActor);
+		}
 	}
 
+}
+
+// 移除行动
+// 判断行动的正确性后进行移除
+void USActionComponent::RemoveAction(USAction* ActionToRemove)
+{
+	if (ensure(ActionToRemove))
+	{
+		Actions.Remove(ActionToRemove);
+	}
 }
 
 // 启动行动
