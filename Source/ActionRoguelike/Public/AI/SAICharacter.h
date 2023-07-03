@@ -11,6 +11,7 @@ class UPawnSensingComponent; // 环境感知组件
 class USAttributeComponent; // 属性组件
 class UUserWidget; // UI
 class USWorldUserWidget; // AI血条UI
+class USActionComponent; // 行动组件
 
 UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
@@ -36,6 +37,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USAttributeComponent* AttributeComp; // 属性组件
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USActionComponent* ActionComp; // 行动组件
 
 	// 注册事件回调函数
 	virtual void PostInitializeComponents() override;

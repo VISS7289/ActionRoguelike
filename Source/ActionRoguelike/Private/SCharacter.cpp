@@ -87,6 +87,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASCharacter::Move);
 		// ¿´
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
+		// ¸ñµ²
+		EnhancedInputComponent->BindAction(PrimaryParryAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryParry);
 		// ÆÕÍ¨¹¥»÷
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 		// ³å´Ì
@@ -165,6 +167,12 @@ void ASCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+// ¸ñµ²
+void ASCharacter::PrimaryParry()
+{
+	ActionComp->StartActionByName(this, "Parry");
 }
 
 // ÆÕÍ¨¹¥»÷

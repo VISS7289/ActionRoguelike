@@ -46,7 +46,7 @@ public:
 	void StartAction(AActor* InstigatorActor);
 
 	// Ω· ¯––∂Ø
-	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void StopAction(AActor* InstigatorActor);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")

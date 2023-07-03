@@ -6,13 +6,14 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "DrawDebugHelpers.h"
-#include "Component/SAttributeComponent.h"
 #include "BrainComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/SWorldUserWidget.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/SAttributeComponent.h"
+#include "Component/SActionComponent.h"
 
 
 // Sets default values
@@ -23,6 +24,8 @@ ASAICharacter::ASAICharacter()
 	PawnSensingComponent = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComponent");
 	// 添加属性组件
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+	// 添加行动组件
+	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
 
 	// 放置或生成时自动添加AI控制器
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
