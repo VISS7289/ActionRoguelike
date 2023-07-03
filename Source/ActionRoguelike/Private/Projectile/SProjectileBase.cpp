@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SProjectileBase.h"
+#include "Projectile/SProjectileBase.h"
 #include "Components/SphereComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Components/AudioComponent.h"
@@ -24,6 +24,7 @@ ASProjectileBase::ASProjectileBase()
 
 	// 添加球体组件
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	SphereComp->SetCollisionProfileName("Projectile");
 	RootComponent = SphereComp;
 	// 添加音效组件
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
@@ -64,22 +65,23 @@ void ASProjectileBase::PostInitializeComponents()
 
 	// 注册组件碰撞事件处理函数  
 	SphereComp->OnComponentHit.AddDynamic(this, &ASProjectileBase::OnActorHit);
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASProjectileBase::OnActorOverlap);
 }
 
 // 组件碰撞事件处理函数  
 void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (ensureAlways(HitEffect) && OtherActor != GetInstigator())
+	if (ensure(HitEffect))
 	{
-		//DrawDebugSphere(GetWorld(), GetActorLocation(), 10.0f, 32, FColor::Green, false, 2.0f); // Debug球
-		//USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-		//if (AttributeComp)
-		//{
-		//	AttributeComp->ApplyHealthChange(GetInstigator(), Damage);
-		//}
-		//Explode();
+		Explode();
+	}
+}
 
-		USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, Hit);
+void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (ensure(HitEffect) && OtherActor && OtherActor != GetInstigator())
+	{
+		USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult);
 		Explode();
 	}
 }
@@ -87,7 +89,7 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 // 常规碰撞后响应
 void ASProjectileBase::Explode_Implementation()
 {
-	if (ensureAlways(HitEffect) && ensureAlways(!IsPendingKill()))
+	if (ensure(HitEffect) && ensure(!IsPendingKill()))
 	{
 		// 生成特效
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation(), GetActorRotation(), FVector(1.0f, 1.0f, 1.0f), true, EPSCPoolMethod::None, true);

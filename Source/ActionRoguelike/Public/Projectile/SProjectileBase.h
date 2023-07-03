@@ -43,7 +43,7 @@ protected:
 	float DestoryPrjDelay;
 
 	UPROPERTY(EditAnywhere)
-		float Damage; // 伤害
+	float Damage; // 伤害
 
 	// 自我销毁
 	virtual void DestoryPrj();
@@ -57,6 +57,9 @@ protected:
 	// 组件碰撞事件处理函数  
 	UFUNCTION()
 	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+	virtual void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Explode();

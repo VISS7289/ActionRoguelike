@@ -23,13 +23,11 @@ public:
 protected:
 
 	UPROPERTY(VisibleAnywhere)
-	URadialForceComponent* ForceComp; // 径向力组件
+	URadialForceComponent* ForceComp; // 径向力组件;
 
-	// 注册事件回调函数
-	virtual void PostInitializeComponents() override;
-
-	// 组件碰撞事件处理函数  
-	UFUNCTION()
-	void OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	// 组件碰撞事件处理函数
+	virtual void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	/*UFUNCTION()
+	void OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
 	
 };
