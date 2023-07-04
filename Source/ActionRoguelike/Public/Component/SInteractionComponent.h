@@ -23,6 +23,10 @@ public:
 
 protected:
 
+	// 服务器交互
+	UFUNCTION(Server, Reliable)
+	void ServerInteract(AActor* InFocus);
+
 	// 周期检测
 	void FindBestInteractable();
 

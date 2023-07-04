@@ -14,7 +14,7 @@
 #include "SPlayerState.h"
 
 // 是否生成敌人AI作弊代码
-static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enable Spawning Bots Via Timer."), ECVF_Cheat);
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), false, TEXT("Enable Spawning Bots Via Timer."), ECVF_Cheat);
 
 ASGameModeBase::ASGameModeBase()
 {

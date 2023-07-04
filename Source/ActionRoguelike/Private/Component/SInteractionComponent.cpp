@@ -42,8 +42,15 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FindBestInteractable();
+	// 周期检测只能在客户端运行，不能在服务端运行
+	APawn* MyPawn = Cast<APawn>(GetOwner());
+	if (MyPawn->IsLocallyControlled())
+	{
+		FindBestInteractable();
+	}
+
 }
+
 
 // 周期检测
 // 使用胶囊检测，从摄像头朝屏幕中心检测。把检测到的交互物体绑定提示UI。
@@ -145,14 +152,18 @@ void USInteractionComponent::FindBestInteractable()
 // 如果存在交互物体就调用接口
 void USInteractionComponent::PrimaryInteract()
 {
-	if (FocusActor == nullptr)
+	ServerInteract(FocusActor);
+}
+
+// 服务器交互
+void USInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
+{
+	if (InFocus == nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor To Interact");
 		return;
 	}
-	
+
 	APawn* MyPawn = Cast<APawn>(GetOwner()); // 传入Pawn
-	ISGmeplayInterface::Execute_Interact(FocusActor, MyPawn); // 调用接口
-
+	ISGmeplayInterface::Execute_Interact(InFocus, MyPawn); // 调用接口
 }
-
