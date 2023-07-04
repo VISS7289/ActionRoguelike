@@ -46,6 +46,9 @@ void ASDashProjectile::TeleportInstigator()
 	if (ensureAlways(ActorToTeleport))
 	{
 		// ´«ËÍ·¢ËÍÕß
-		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
+		if (!ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false))
+		{
+			ActorToTeleport->TeleportTo(GetActorLocation() + FVector(0, 0, 200), ActorToTeleport->GetActorRotation(), false, false);
+		}
 	}
 }

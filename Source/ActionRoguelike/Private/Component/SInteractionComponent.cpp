@@ -10,6 +10,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Actor.h"
+#include "UI/SWorldUserWidget.h"
+#include "Blueprint/UserWidget.h"
 
 // 交互Debug显示
 static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.DebugDrawInteraction"), true, TEXT("Enable Debug Line For Interact Component."), ECVF_Cheat);
@@ -17,11 +19,11 @@ static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.DebugDrawInt
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	TraceDistance = 500.0f;
+	TraceRadius = 30.0f;
+	CollisionChannel = ECC_WorldDynamic;
 }
 
 
@@ -40,22 +42,22 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	FindBestInteractable();
 }
 
-// 1次交互
-void USInteractionComponent::PrimaryInteract()
+// 周期检测
+// 使用胶囊检测，从摄像头朝屏幕中心检测。把检测到的交互物体绑定提示UI。
+void USInteractionComponent::FindBestInteractable()
 {
-	
 	bool bDrawDebug = CVarDebugDrawInteraction.GetValueOnGameThread();
 
 	// 设置碰撞检测物体
 	FCollisionObjectQueryParams ObjectQueryParams;
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(CollisionChannel);
 	// 设置起点终点
 	FVector Start, End;
 	AActor* MyOwner = GetOwner();
-	
+
 	// 获取相机， 如果有相机组件就用相机组件计算起点终点，否则就用角色眼睛与转向
 	UCameraComponent* CameraComp = Cast<UCameraComponent>(MyOwner->GetComponentByClass(UCameraComponent::StaticClass()));
 	if (CameraComp)
@@ -63,29 +65,30 @@ void USInteractionComponent::PrimaryInteract()
 		// 设置起点，相机
 		Start = CameraComp->GetComponentLocation();
 		// 设置终点，相机到屏幕中间第一个触碰到的物体
-		End = CameraComp->GetComponentLocation() + (CameraComp->GetComponentRotation().Vector() * 500);
+		End = CameraComp->GetComponentLocation() + (CameraComp->GetComponentRotation().Vector() * TraceDistance);
 	}
 	else {
 		FVector  EyeLocation; // 眼睛位置
 		FRotator EyeRotation; // 眼睛朝向
-		
+
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 		Start = EyeLocation;
-		End = EyeLocation + (EyeRotation.Vector() * 500); // 终点
+		End = EyeLocation + (EyeRotation.Vector() * TraceDistance); // 终点
 	}
 
 	//FHitResult Hit;
 	//bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
 
-	float Radius = 30.0f; // 胶囊检测半径
 
 	TArray<FHitResult> Hits; // 检测到的目标数组
 	FCollisionShape Shape; // 检测物体形状
-	Shape.SetSphere(Radius);
+	Shape.SetSphere(TraceRadius);
 	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, Start, End, FQuat::Identity, ObjectQueryParams, Shape); // 胶囊检测
 	FColor HitColor = bBlockingHit ? FColor::Green : FColor::Red; // 根据是否检测到物体确定Debug颜色
 
+
 	// 逐个调用接口
+	AActor* FocusActorStaging = nullptr;
 	for (FHitResult Hit : Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
@@ -95,24 +98,61 @@ void USInteractionComponent::PrimaryInteract()
 			// 判断接口存在
 			if (HitActor->Implements<USGmeplayInterface>())
 			{
-				APawn* MyPawn = Cast<APawn>(MyOwner); // 传入Pawn
-				ISGmeplayInterface::Execute_Interact(HitActor, MyPawn); // 调用接口
+				FocusActorStaging = HitActor;
+
 				// Debug并退出，因为只希望触发依次
 				if (bDrawDebug)
 				{
-					DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, HitColor, false, 2.0f); // Debug球
+					DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, HitColor, false, 0.0f); // Debug球
 				}
-				
+
 				break;
 			}
 		}
-		
-	}
 
-	if (bDrawDebug)
-	{
-		DrawDebugLine(GetWorld(), Start, End, HitColor, false, 2.0f, 0, 2.0f); // Debug线
 	}
+	FocusActor = FocusActorStaging;
+
+	// 存在交互物体
+	if (FocusActor)
+	{
+		// 如果UI还没有被创建，就用默认提示UI类创建UI
+		if (DefaultWidgetInstance == nullptr && ensure(DefaultWidgetClass))
+		{
+			DefaultWidgetInstance = CreateWidget<USWorldUserWidget>(GetWorld(), DefaultWidgetClass);
+		}
+		// UI被创建后绑定在交互物体上
+		if (DefaultWidgetInstance)
+		{
+			DefaultWidgetInstance->AttacheActor = FocusActor;
+
+			if (!DefaultWidgetInstance->IsInViewport())
+			{
+				DefaultWidgetInstance->AddToViewport();
+			}
+		}
+	}
+	else // 不存在交互物体的时候删掉UI
+	{
+		if (DefaultWidgetInstance)
+		{
+			DefaultWidgetInstance->RemoveFromParent();
+		}
+	}
+}
+
+// 1次交互
+// 如果存在交互物体就调用接口
+void USInteractionComponent::PrimaryInteract()
+{
+	if (FocusActor == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor To Interact");
+		return;
+	}
+	
+	APawn* MyPawn = Cast<APawn>(GetOwner()); // 传入Pawn
+	ISGmeplayInterface::Execute_Interact(FocusActor, MyPawn); // 调用接口
 
 }
 

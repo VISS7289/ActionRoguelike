@@ -27,9 +27,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Credits")
 	int32 GetCredits() const;
 
+	// 积分增加
 	UFUNCTION(BlueprintCallable, Category = "Credits")
 	void AddCredits(int32 Delta);
 
+	// 积分减少
 	UFUNCTION(BlueprintCallable, Category = "Credits")
 	bool RemoveCredits(int32 Delta);
 

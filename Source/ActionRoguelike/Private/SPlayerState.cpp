@@ -5,7 +5,7 @@
 
 
 
-
+// 积分增加
 void ASPlayerState::AddCredits(int32 Delta)
 {
 	if (!ensure(Delta))
@@ -16,6 +16,7 @@ void ASPlayerState::AddCredits(int32 Delta)
 	OnCreditsChanged.Broadcast(this, Credits, Delta);
 }
 
+// 积分减少
 bool ASPlayerState::RemoveCredits(int32 Delta)
 {
 	if (!ensure(Delta))

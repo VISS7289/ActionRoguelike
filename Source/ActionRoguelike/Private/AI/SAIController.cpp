@@ -14,14 +14,4 @@ void ASAIController::BeginPlay()
 		RunBehaviorTree(BehaviorTree);
 	}
 
-
-	//// 设置
-	//APawn* MyPawn = UGameplayStatics::GetPlayerPawn(this, 0);
-	//if (MyPawn)
-	//{
-	//	// 设置追踪地点与追踪对象
-	//	GetBlackboardComponent()->SetValueAsVector("MoveToLocation", MyPawn->GetActorLocation());
-	//	GetBlackboardComponent()->SetValueAsObject("TargetActor", MyPawn);
-	//}
-
 }

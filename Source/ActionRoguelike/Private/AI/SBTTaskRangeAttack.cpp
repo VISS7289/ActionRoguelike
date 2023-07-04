@@ -19,6 +19,7 @@ USBTTaskRangeAttack::USBTTaskRangeAttack()
 
 
 // 执行攻击
+// 从左手插槽位置生成子弹打向攻击对象所处位置
 EBTNodeResult::Type USBTTaskRangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	// 获取AIController

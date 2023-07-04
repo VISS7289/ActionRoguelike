@@ -5,7 +5,7 @@
 #include "Component/SActionComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "SGameplayFunctionLibrary.h"
-#include "SActionEffect.h"
+#include "Actions/SActionEffect.h"
 
 
 // 组件碰撞事件处理函数

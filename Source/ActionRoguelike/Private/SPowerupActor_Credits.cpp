@@ -9,6 +9,7 @@ ASPowerupActor_Credits::ASPowerupActor_Credits()
 	CreditsAmount = 80;
 }
 
+// ¼Ó»ý·Ö
 void ASPowerupActor_Credits::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (!ensure(InstigatorPawn))

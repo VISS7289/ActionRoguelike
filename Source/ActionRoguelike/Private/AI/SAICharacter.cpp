@@ -50,11 +50,12 @@ void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
 	// 将注意到的对象设为攻击对象
 	SetTargetActor(Pawn);
-	// 打印
+
 	DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::Green, 2.0f, true);
 }
 
 // 生命值改变时
+// 如果受到攻击，执行材质受击效果，切换攻击目标与死亡判定
 void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
 	// 受击判断
@@ -74,8 +75,6 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 			}
 		}
 		
-
-
 		// 攻击对象是自己的话不能将自己设为攻击目标
 		if (InstigatordActor != this)
 		{

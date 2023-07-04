@@ -2,7 +2,7 @@
 
 
 #include "Component/SActionComponent.h"
-#include "SAction.h"
+#include "Actions/SAction.h"
 
 // Sets default values for this component's properties
 USActionComponent::USActionComponent()

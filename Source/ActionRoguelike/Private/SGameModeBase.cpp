@@ -36,7 +36,7 @@ void ASGameModeBase::StartPlay()
 void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 {
 	ASCharacter* Player = Cast<ASCharacter>(VictimActor);
-	if (Player)
+	if (Player) // 死的是玩家
 	{
 		FTimerHandle TimerHandle_RespawnDelay;
 
@@ -48,7 +48,7 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 	}
 
 	APawn* KillerPawn = Cast<APawn>(Killer);
-	if (KillerPawn)
+	if (KillerPawn) // 死的是AI
 	{
 		ASPlayerState* PS = KillerPawn->GetPlayerState<ASPlayerState>();
 		if (PS)

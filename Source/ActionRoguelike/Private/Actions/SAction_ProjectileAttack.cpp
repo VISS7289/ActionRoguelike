@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SAction_ProjectileAttack.h"
+#include "Actions/SAction_ProjectileAttack.h"
 #include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
 
@@ -9,7 +9,7 @@
 
 USAction_ProjectileAttack::USAction_ProjectileAttack()
 {
-	HandSocketName = "Muzzle_02";
+	HandSocketName = "Muzzle_02"; // 左手发射骨骼名称
 }
 
 // 开始远程攻击行动
