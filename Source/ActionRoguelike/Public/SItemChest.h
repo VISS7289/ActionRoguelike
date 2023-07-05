@@ -25,8 +25,6 @@ public:
 
 	// ½»»¥½Ó¿Ú
 	void Interact_Implementation(APawn* InstigatorPawn);
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 public:	
 	// Sets default values for this actor's properties

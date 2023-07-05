@@ -3,6 +3,7 @@
 
 #include "Component/SAttributeComponent.h"
 #include "SGameModeBase.h"
+#include "Net/UnrealNetwork.h"
 
 // 伤害倍乘作弊代码
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultiplier"), 1.0f, TEXT("Global Damage Modifier For Attribute Component."), ECVF_Cheat);
@@ -12,7 +13,20 @@ USAttributeComponent::USAttributeComponent()
 {
 	Health = 100;
 	HealthMax = 100;
+
+	SetIsReplicatedByDefault(true);
 }
+
+void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(USAttributeComponent, Health);
+	DOREPLIFETIME(USAttributeComponent, HealthMax);
+
+	//DOREPLIFETIME_CONDITION(USActionComponent, HealthMax, COND_InitialOnly);
+}
+
 
 // 杀死自身
 bool USAttributeComponent::Kill(AActor* InstigatordActor)
@@ -33,7 +47,11 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Del
 	float OldHealth = Health; // 过去生命值
 	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 	float ActualDelta = Health - OldHealth; // 实际变化量
-	OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
+	//OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
+	if (ActualDelta != 0)
+	{
+		MulticastHealthChanged(InstigatordActor, Health, ActualDelta);
+	}
 
 	if (Delta < 0.0f && Health <= 0.0f)
 	{
@@ -46,6 +64,11 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Del
 	}
 
 	return ActualDelta != 0;
+}
+
+void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatordActor, float NewHealth, float Delta)
+{
+	OnHealthChanged.Broadcast(InstigatordActor, this, NewHealth, Delta);
 }
 
 // 访问生命值

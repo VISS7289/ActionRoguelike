@@ -4,6 +4,7 @@
 #include "Component/SActionComponent.h"
 #include "Actions/SAction.h"
 
+
 // Sets default values for this component's properties
 USActionComponent::USActionComponent()
 {
@@ -11,6 +12,7 @@ USActionComponent::USActionComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	
 }
 
 

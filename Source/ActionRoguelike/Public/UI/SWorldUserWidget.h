@@ -30,7 +30,7 @@ protected:
 
 public:
 
-	UPROPERTY(BlueprintReadOnly, Category = "UI")
+	UPROPERTY(BlueprintReadOnly, Category = "UI", meta = (ExposeOnSpawn = true))
 	AActor* AttacheActor; // ¸½×ÅÕß
 	
 };
