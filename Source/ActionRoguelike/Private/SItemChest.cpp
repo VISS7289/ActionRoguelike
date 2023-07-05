@@ -4,6 +4,7 @@
 #include "SItemChest.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ASItemChest::ASItemChest()
@@ -24,13 +25,30 @@ ASItemChest::ASItemChest()
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(Treasure);
 
+	SetReplicates(true);
 }
 
 // 交互接口
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	LidMesh->SetRelativeLocation(TargetTransform); // 盖子移动
-	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0)); // 盖子旋转
+	bLidOpened = !bLidOpened;
+	OnRep_LidOpened();
+}
+
+void ASItemChest::OnRep_LidOpened()
+{
+	float CurPitch = bLidOpened ? TargetPitch : 0;
+	FVector CurTransform = bLidOpened ? TargetTransform : FVector(0, 0, 0);
+
+	LidMesh->SetRelativeLocation(CurTransform); // 盖子移动
+	LidMesh->SetRelativeRotation(FRotator(CurPitch, 0, 0)); // 盖子旋转
+}
+
+void ASItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASItemChest, bLidOpened);
 }
 
 // Called when the game starts or when spawned

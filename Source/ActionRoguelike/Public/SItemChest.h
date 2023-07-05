@@ -25,6 +25,8 @@ public:
 
 	// 交互接口
 	void Interact_Implementation(APawn* InstigatorPawn);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -44,7 +46,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* EffectComp; // 粒子系统
 
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened")
+	bool bLidOpened;
 
+	UFUNCTION()
+	void OnRep_LidOpened();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
