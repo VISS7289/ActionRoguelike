@@ -21,6 +21,9 @@ class ACTIONROGUELIKE_API USAction : public UObject
 	
 protected:
 
+	UPROPERTY()
+	TObjectPtr<USActionComponent> ActionComp;
+
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	USActionComponent* GetOwningComponent() const;
 
@@ -33,6 +36,8 @@ protected:
 	int Running = 0; // ÔËÐÐ×´Ì¬
 
 public:
+
+	void Initialize(USActionComponent* NewActionComp);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool bAutoStart;
@@ -55,6 +60,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
 
-	UWorld* GetWorld() const override;
+	virtual UWorld* GetWorld() const override;
 
 };

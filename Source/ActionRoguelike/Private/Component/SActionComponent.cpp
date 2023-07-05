@@ -46,9 +46,11 @@ void USActionComponent::AddAction(AActor* InstigatorActor, TSubclassOf<USAction>
 		return;
 	}
 
-	USAction* NewAction = NewObject<USAction>(this, ActionClass);
+
+	USAction* NewAction = NewObject<USAction>(GetOwner(), ActionClass);
 	if (ensure(NewAction))
 	{
+		NewAction->Initialize(this);
 		Actions.Add(NewAction);
 
 		if (NewAction->bAutoStart && ensure(NewAction->CanStart(InstigatorActor)))

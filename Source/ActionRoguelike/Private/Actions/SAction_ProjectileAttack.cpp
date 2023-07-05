@@ -31,7 +31,15 @@ void USAction_ProjectileAttack::StartAction_Implementation(AActor* InstigatorAct
 			Delegate.BindUFunction(this, "AttackDelay_Elapsed", Character);
 
 			float AttackDelay = 0.2f;
+
+			//UWorld* World = GetWorld();
+			//if (World)
+			//{
+			//	World->GetTimerManager().SetTimer(TimerHandle_AttackDelay, Delegate, AttackDelay, false);
+			//}
+
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle_AttackDelay, Delegate, AttackDelay, false);
+			
 		}
 	}
 

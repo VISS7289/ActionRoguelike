@@ -7,13 +7,18 @@
 #include "Component/SActionComponent.h"
 
 
+void USAction::Initialize(USActionComponent* NewActionComp)
+{
+	ActionComp = NewActionComp;
+}
+
+
 // 判断是否可以开始
 // 根据查看当前标签里是否含有任意BlockedTags，或者Running是否正确
 bool USAction::CanStart_Implementation(AActor* InstigatorActor)
 {
-	USActionComponent* ActionComp = GetOwningComponent();
-
-	if (ActionComp->ActiveGameplayTags.HasAny(BlockedTags) || Running < 0)
+	USActionComponent* Comp = GetOwningComponent();
+	if (Comp->ActiveGameplayTags.HasAny(BlockedTags) || Running > 0)
 	{
 		return false;
 	}
@@ -26,8 +31,8 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 {
 	UE_LOG(LogTemp, Log, TEXT("Running:%s"), *GetNameSafe(this));
 
-	USActionComponent* ActionComp = GetOwningComponent();
-	ActionComp->ActiveGameplayTags.AppendTags(GrantsTags);
+	USActionComponent* Comp = GetOwningComponent();
+	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
 
 	Running++;
 }
@@ -40,18 +45,19 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 
 	ensure(Running > 0);
 
-	USActionComponent* ActionComp = GetOwningComponent();
-	ActionComp->ActiveGameplayTags.RemoveTags(GrantsTags);
+	USActionComponent* Comp = GetOwningComponent();
+	Comp->ActiveGameplayTags.RemoveTags(GrantsTags);
 
 	Running--;
 }
 
 UWorld* USAction::GetWorld() const
 {
-	UActorComponent* ActorComp = Cast<UActorComponent>(GetOuter());
-	if (ActorComp)
+	/*UActorComponent* ActorComp = Cast<UActorComponent>(GetOuter());*/
+	AActor* Actor = Cast<AActor>(GetOuter());
+	if (Actor)
 	{
-		return ActorComp->GetWorld();
+		return Actor->GetWorld();
 	}
 	return nullptr;
 }
@@ -59,7 +65,7 @@ UWorld* USAction::GetWorld() const
 
 USActionComponent* USAction::GetOwningComponent() const
 {
-	return Cast<USActionComponent>(GetOuter());
+	return ActionComp;
 }
 
 bool USAction::IsRunning() const
