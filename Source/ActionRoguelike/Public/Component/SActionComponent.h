@@ -44,6 +44,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Action")
 	TArray<TSubclassOf<USAction>> DefaultActions;
 
+	UPROPERTY(BlueprintReadOnly)
 	TArray<USAction*> Actions; // 所有行动
 
 	// Called when the game starts
