@@ -27,7 +27,10 @@ protected:
 	USWorldUserWidget* ActiveHealthBar;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> HealthBarWidgetClass;
+	TSubclassOf<UUserWidget> HealthBarWidgetClass; // 敌人血条UI
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SpottedWidgetClass; // 敌人注意UI
 
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	FName TimeToHitParamName; // 受击闪烁材质参数名称
@@ -45,7 +48,12 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	// 设置攻击对象
+	UFUNCTION(BlueprintCallable, Category = "AI")
 	void SetTargetActor(AActor* NewTarget);
+
+	// 获取当前攻击对象
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	AActor* GetTargetActor() const;
 
 	// 注意到玩家时，打印调试信息与设置黑板注意对象
 	UFUNCTION()

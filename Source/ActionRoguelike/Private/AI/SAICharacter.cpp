@@ -48,10 +48,21 @@ void ASAICharacter::PostInitializeComponents()
 // 注意到玩家时，打印调试信息与设置黑板注意对象
 void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
-	// 将注意到的对象设为攻击对象
-	SetTargetActor(Pawn);
+	if (GetTargetActor() != Pawn)
+	{
+		// 将注意到的对象设为攻击对象
+		SetTargetActor(Pawn);
 
-	DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::Green, 2.0f, true);
+		DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::Green, 2.0f, true);
+		USWorldUserWidget* NewWidget = CreateWidget<USWorldUserWidget>(GetWorld(), SpottedWidgetClass);
+		if (NewWidget)
+		{
+			NewWidget->AttacheActor = this;
+			// 让注意提示在血条上方
+			NewWidget->AddToViewport(10);
+		}
+	}
+
 }
 
 // 生命值改变时
@@ -113,4 +124,16 @@ void ASAICharacter::SetTargetActor(AActor* NewTarget)
 		AIC->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
 
 	}
+}
+
+// 获取当前攻击对象
+AActor* ASAICharacter::GetTargetActor() const
+{
+	AAIController* AIC = Cast<AAIController>(GetController());
+	if (AIC)
+	{
+		return Cast<AActor>(AIC->GetBlackboardComponent()->GetValueAsObject("TargetActor"));
+	}
+
+	return nullptr;
 }
