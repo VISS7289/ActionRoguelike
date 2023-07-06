@@ -6,6 +6,7 @@
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Component/SAttributeComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ASExplosiveBarrel::ASExplosiveBarrel()
@@ -26,6 +27,8 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	ForceComp->bImpulseVelChange = true; 
 	// 设置碰撞通道  
 	ForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
+
+	SetReplicates(true);
 }
 
 // 注册事件回调函数
@@ -39,8 +42,10 @@ void ASExplosiveBarrel::PostInitializeComponents()
 // 组件碰撞事件处理函数  
 void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// 触发辐射力组件的脉冲  
-	ForceComp->FireImpulse();
+	//// 触发辐射力组件的脉冲  
+	//ForceComp->FireImpulse();
+
+	MulticastExplode();
 
 	// 如果玩家碰到炸药桶，则对玩家造成伤害
 	
@@ -60,4 +65,10 @@ void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 	// 游戏中打印字符串
 	FString CombinedString = FString::Printf(TEXT("Hit At Location: %s"), *Hit.ImpactPoint.ToString());
 	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
+}
+
+void ASExplosiveBarrel::MulticastExplode_Implementation()
+{
+	// 触发辐射力组件的脉冲  
+	ForceComp->FireImpulse();
 }

@@ -30,6 +30,9 @@ protected:
 	// 注册事件回调函数
 	virtual void PostInitializeComponents() override;
 
+	UFUNCTION(NetMulticast, UnReliable)
+	void MulticastExplode();
+
 	// 组件碰撞事件处理函数  
 	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
