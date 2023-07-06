@@ -12,7 +12,7 @@ USActionComponent::USActionComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
+	SetIsReplicatedByDefault(true);
 }
 
 
@@ -82,6 +82,12 @@ bool USActionComponent::StartActionByName(AActor* InstigatorActor, FName ActionN
 		{
 			if (Action->CanStart(InstigatorActor))
 			{
+
+				// 客户端
+				if (!GetOwner()->HasAuthority())
+				{
+					ServerStartAction(InstigatorActor, ActionName);
+				}
 				Action->StartAction(InstigatorActor);
 				return true;
 			}
@@ -93,6 +99,11 @@ bool USActionComponent::StartActionByName(AActor* InstigatorActor, FName ActionN
 		}
 	}
 	return false;
+}
+
+void USActionComponent::ServerStartAction_Implementation(AActor* InstigatorActor, FName ActionName)
+{
+	StartActionByName(InstigatorActor, ActionName);
 }
 
 // 结束行动
