@@ -9,6 +9,11 @@
 // 调用TargetActor（目标）的属性组件的生命改变函数造成伤害
 bool USGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
 {
+	if (!IsValid(TargetActor))
+	{
+		return false;
+	}
+
 	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(TargetActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 	if (AttributeComp)
 	{
