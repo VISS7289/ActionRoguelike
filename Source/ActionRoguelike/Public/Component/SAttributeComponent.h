@@ -80,6 +80,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetRage() const;
 
+	// 最大怒气获取
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetRageMax() const;
+
 	// 改变怒气
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyRage(AActor* InstigatordActor, float Delta);

@@ -146,3 +146,8 @@ bool USAttributeComponent::ApplyRage(AActor* InstigatordActor, float Delta)
 
 	return ActualDelta != 0;
 }
+
+float USAttributeComponent::GetRageMax() const
+{
+	return RageMax;
+}
