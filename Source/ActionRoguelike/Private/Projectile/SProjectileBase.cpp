@@ -39,7 +39,7 @@ ASProjectileBase::ASProjectileBase()
 	MovementComp->bInitialVelocityInLocalSpace = true;
 	MovementComp->ProjectileGravityScale = 0.0f;
 
-	SetReplicates(true);
+	//SetReplicates(true);
 
 }
 
@@ -84,6 +84,7 @@ void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, 
 	if (ensure(HitEffect) && OtherActor && OtherActor != GetInstigator())
 	{
 		USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult);
+		USGameplayFunctionLibrary::ApplyRage(GetInstigator(), OtherActor, Rage);
 		Explode();
 	}
 }

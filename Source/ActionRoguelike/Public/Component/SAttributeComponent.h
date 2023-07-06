@@ -7,7 +7,7 @@
 #include "SAttributeComponent.generated.h"
 
 // 注册生命值改变事件
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatordActor, USAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatordActor, USAttributeComponent*, OwningComp, float, NewValue, float, Delta);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -44,6 +44,15 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastHealthChanged(AActor* InstigatordActor, float NewHealth, float Delta);
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastRageChanged(AActor* InstigatordActor, float NewRage, float Delta);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = "Attributes")
+	float Rage; // 怒气值
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = "Attributes")
+	float RageMax; // 最大怒气值
+
 
 public:	
 
@@ -60,12 +69,26 @@ public:
 	bool ApplyHealthChange(AActor* InstigatordActor, float Delta);
 
 	// 生命值获取
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetHealth();
 
 	// 最大生命值获取
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetHealthMax();
+
+	// 怒气获取
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetRage() const;
+
+	// 改变怒气
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool ApplyRage(AActor* InstigatordActor, float Delta);
 
 	// 注册生命值改变事件
 	UPROPERTY(BlueprintAssignable)
-	FOnHealthChanged OnHealthChanged;
+	FOnAttributeChanged OnHealthChanged;
+
+	// 注册怒气值改变事件
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChanged OnRageChanged;
 };

@@ -13,6 +13,8 @@ USAttributeComponent::USAttributeComponent()
 {
 	Health = 100;
 	HealthMax = 100;
+	Rage = 0;
+	RageMax = 220;
 
 	SetIsReplicatedByDefault(true);
 }
@@ -71,6 +73,11 @@ void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* Instiga
 	OnHealthChanged.Broadcast(InstigatordActor, this, NewHealth, Delta);
 }
 
+void USAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatordActor, float NewRage, float Delta)
+{
+	OnRageChanged.Broadcast(InstigatordActor, this, NewRage, Delta);
+}
+
 // 访问生命值
 float USAttributeComponent::GetHealth()
 {
@@ -115,4 +122,27 @@ bool USAttributeComponent::IsActorAlive(AActor* FromActor)
 		return AttributeComp->IsAlive();
 	}
 	return false;
+}
+
+// 怒气获取
+float USAttributeComponent::GetRage() const
+{
+	return Rage;
+}
+
+// 改变怒气
+// 根据变化量Delta更新怒气，广播OnRageChanged。
+bool USAttributeComponent::ApplyRage(AActor* InstigatordActor, float Delta)
+{
+
+	float OldRage = Rage; // 过去生命值
+	Rage = FMath::Clamp(Rage + Delta, 0.0f, RageMax);
+	float ActualDelta = Rage - OldRage; // 实际变化量
+	//OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
+	if (ActualDelta != 0)
+	{
+		MulticastRageChanged(InstigatordActor, Rage, ActualDelta);
+	}
+
+	return ActualDelta != 0;
 }

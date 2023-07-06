@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float Damage; // 伤害
 
+	UPROPERTY(EditAnywhere)
+	float Rage; // 伤害时产生的怒气
+
 	// 自我销毁
 	virtual void DestoryPrj();
 

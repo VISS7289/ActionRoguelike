@@ -26,6 +26,7 @@ void ASParryProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		else if (ensure(HitEffect)) // Ã»±»·´»÷
 		{
 			USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult);
+			USGameplayFunctionLibrary::ApplyRage(GetInstigator(), OtherActor, Rage);
 			Explode();
 
 			if (ActionComp)

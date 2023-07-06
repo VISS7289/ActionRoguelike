@@ -24,4 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static bool ApplyDirectionalDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount, const FHitResult& HitResult);
 
+	// 造成怒气函数
+	UFUNCTION(BlueprintCallable)
+	static bool ApplyRage(AActor* RageCauser, AActor* TargetActor, float RageAmount);
+
 };

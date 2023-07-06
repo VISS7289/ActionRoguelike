@@ -32,3 +32,15 @@ bool USGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AAc
 	}
 	return false;
 }
+
+// 造成怒气函数
+// 调用TargetActor（目标）的属性组件的怒气改变函数
+bool USGameplayFunctionLibrary::ApplyRage(AActor* RageCauser, AActor* TargetActor, float RageAmount)
+{
+	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(TargetActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	if (AttributeComp)
+	{
+		return AttributeComp->ApplyRage(RageCauser, RageAmount);
+	}
+	return false;
+}
