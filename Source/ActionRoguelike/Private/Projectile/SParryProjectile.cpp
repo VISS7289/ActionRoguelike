@@ -29,7 +29,7 @@ void ASParryProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 			USGameplayFunctionLibrary::ApplyRage(GetInstigator(), OtherActor, Rage);
 			Explode();
 
-			if (ActionComp)
+			if (ActionComp && HasAuthority())
 			{
 				ActionComp->AddAction(GetInstigator(), BurningActionClass);
 			}

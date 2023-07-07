@@ -44,6 +44,9 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerStartAction(AActor* InstigatorActor, FName ActionName);
 
+	UFUNCTION(Server, Reliable)
+	void ServerStopAction(AActor* InstigatorActor, FName ActionName);
+
 	UPROPERTY(EditAnywhere, Category = "Action")
 	TArray<TSubclassOf<USAction>> DefaultActions;
 

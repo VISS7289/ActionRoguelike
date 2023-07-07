@@ -31,8 +31,8 @@ bool USAction::CanStart_Implementation(AActor* InstigatorActor)
 // 开始行动并且更新标签与Running
 void USAction::StartAction_Implementation(AActor* Instigator)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Running:%s"), *GetNameSafe(this));
-	USGameplayFunctionLibrary::LogOnScreen(this, FString::Printf(TEXT("Running:%s"), *GetNameSafe(this)), FColor::Green);
+	UE_LOG(LogTemp, Log, TEXT("Running:%s"), *GetNameSafe(this));
+	//USGameplayFunctionLibrary::LogOnScreen(this, FString::Printf(TEXT("Running:%s"), *GetNameSafe(this)), FColor::Green);
 
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
@@ -46,8 +46,8 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 // 结束行动并且更新标签与Running
 void USAction::StopAction_Implementation(AActor* Instigator)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Stopped:%s"), *GetNameSafe(this));
-	USGameplayFunctionLibrary::LogOnScreen(this, FString::Printf(TEXT("Stopped:%s"), *GetNameSafe(this)), FColor::White);
+	UE_LOG(LogTemp, Log, TEXT("Stopped:%s"), *GetNameSafe(this));
+	//USGameplayFunctionLibrary::LogOnScreen(this, FString::Printf(TEXT("Stopped:%s"), *GetNameSafe(this)), FColor::White);
 
 	//ensure(Running > 0); 后期要改
 
