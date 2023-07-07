@@ -20,7 +20,7 @@ void USAction::Initialize(USActionComponent* NewActionComp)
 bool USAction::CanStart_Implementation(AActor* InstigatorActor)
 {
 	USActionComponent* Comp = GetOwningComponent();
-	if (Comp->ActiveGameplayTags.HasAny(BlockedTags) || Running > 0)
+	if (Comp->ActiveGameplayTags.HasAny(BlockedTags) || RepData.Running > 0)
 	{
 		return false;
 	}
@@ -37,7 +37,8 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
 
-	Running++;
+	RepData.Running++;
+	RepData.InstigatorActor = Instigator;
 }
 
 ///////////////////////////////////////////////////////////////后期要改///////////////////////////////////////////////////////
@@ -54,7 +55,8 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 	Comp->ActiveGameplayTags.RemoveTags(GrantsTags);
 
 	//Running--; 后期要改
-	Running = 0;
+	RepData.Running = 0;
+	RepData.InstigatorActor = Instigator;
 }
 ///////////////////////////////////////////////////////////////后期要改///////////////////////////////////////////////////////
 
@@ -75,15 +77,15 @@ USActionComponent* USAction::GetOwningComponent() const
 	return ActionComp;
 }
 
-void USAction::OnRep_IsRunning()
+void USAction::OnRep_RepData()
 {
-	if (Running)
+	if (RepData.Running)
 	{
-		StartAction(nullptr);
+		StartAction(RepData.InstigatorActor);
 	}
 	else
 	{
-		StopAction(nullptr);
+		StopAction(RepData.InstigatorActor);
 	}
 }
 
@@ -91,11 +93,11 @@ void USAction::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(USAction, Running);
+	DOREPLIFETIME(USAction, RepData);
 	DOREPLIFETIME(USAction, ActionComp);
 }
 
 bool USAction::IsRunning() const
 {
-	return Running > 0;
+	return RepData.Running > 0;
 }

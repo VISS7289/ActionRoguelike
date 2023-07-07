@@ -47,22 +47,27 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Del
 	}
 
 	float OldHealth = Health; // 过去生命值
-	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
-	float ActualDelta = Health - OldHealth; // 实际变化量
-	//OnHealthChanged.Broadcast(InstigatordActor, this, Health, ActualDelta);
-	if (ActualDelta != 0)
-	{
-		MulticastHealthChanged(InstigatordActor, Health, ActualDelta);
-	}
+	float NewHealth = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
+	float ActualDelta = NewHealth - OldHealth; // 实际变化量
 
-	if (Delta < 0.0f && Health <= 0.0f)
+	// 客户端不处理生命变化
+	if (!GetOwner()->HasAuthority())
 	{
-		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
-		if (GM)
+		Health = NewHealth;
+		if (ActualDelta != 0)
 		{
-			GM->OnActorKilled(GetOwner(), InstigatordActor);
+			MulticastHealthChanged(InstigatordActor, Health, ActualDelta);
 		}
-		
+
+		if (Delta < 0.0f && Health <= 0.0f)
+		{
+			ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
+			if (GM)
+			{
+				GM->OnActorKilled(GetOwner(), InstigatordActor);
+			}
+
+		}
 	}
 
 	return ActualDelta != 0;

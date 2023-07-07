@@ -11,6 +11,22 @@
 class UWorld;
 class USActionComponent; // 行动组件
 
+
+USTRUCT()
+struct FActionRepData
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY()
+	int Running;
+
+	UPROPERTY()
+	AActor* InstigatorActor;
+
+};
+
 /**
  * 
  */
@@ -33,11 +49,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Tags")
 	FGameplayTagContainer BlockedTags; // 阻挡标签
 
-	UPROPERTY(ReplicatedUsing="OnRep_IsRunning")
-	int Running = 0; // 运行状态
+	UPROPERTY(ReplicatedUsing = "OnRep_RepData")
+	FActionRepData RepData;
+	//int Running = 0; // 运行状态
 
 	UFUNCTION()
-	void OnRep_IsRunning();
+	void OnRep_RepData();
 
 public:
 
