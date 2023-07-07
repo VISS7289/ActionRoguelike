@@ -28,4 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static bool ApplyRage(AActor* RageCauser, AActor* TargetActor, float RageAmount);
 
+	// 多人状态下的日志打印
+	UFUNCTION(BlueprintCallable)
+	static void LogOnScreen(UObject* WorldContext, FString Msg, FColor Color = FColor::White, float Duration = 5.0f);
+
 };

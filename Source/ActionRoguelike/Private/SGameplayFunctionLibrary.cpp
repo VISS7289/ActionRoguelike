@@ -49,3 +49,24 @@ bool USGameplayFunctionLibrary::ApplyRage(AActor* RageCauser, AActor* TargetActo
 	}
 	return false;
 }
+
+// 多人状态下的日志打印
+void USGameplayFunctionLibrary::LogOnScreen(UObject* WorldContext, FString Msg, FColor Color, float Duration)
+{
+	if (!ensure(WorldContext))
+	{
+		return;
+	}
+
+	UWorld* World = WorldContext->GetWorld();
+	if (!ensure(World))
+	{
+		return;
+	}
+
+	FString NetPrefix = World->IsNetMode(NM_Client) ? "[Client]" : "[Server]";
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, Duration, Color, NetPrefix + Msg);
+	}
+}
