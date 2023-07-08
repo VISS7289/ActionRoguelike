@@ -11,6 +11,7 @@
 class UEnvQuery; // 环境查询
 class UEnvQueryInstanceBlueprintWrapper; // 环境查询
 class UCurveFloat; // 浮点数曲线
+class USSaveGame;
 
 /**
  * 
@@ -24,6 +25,8 @@ public:
 
 	ASGameModeBase();
 
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
 	virtual void StartPlay() override;
 
 	// 死亡处理
@@ -33,7 +36,19 @@ public:
 	UFUNCTION(Exec)
 	void KillAll();
 
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	void WriteSaveGame();
+
+	void LoadSaveGame();
+
+	void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
 protected:
+
+	FString SlotName;
+
+	UPROPERTY()
+	USSaveGame* CurrentSaveGame;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UCurveFloat* DiffcultyCurve; // 游戏难度--敌人AI数量

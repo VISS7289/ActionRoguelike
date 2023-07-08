@@ -52,9 +52,13 @@ void USValueChangedWidget::BindWithAttributeChanged(USAttributeComponent* Attrib
 void USValueChangedWidget::GetValueChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewValue, float Delta)
 {
 	ValueChangeCommon(NewValue);
-
-	// 播放PauseHealthAnim动画
-	PlayAnimation(PauseValueAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.0f);
+	
+	if (Delta != 0)
+	{
+		// 播放PauseHealthAnim动画
+		PlayAnimation(PauseValueAnim, 0.0f, 1, EUMGSequencePlayMode::Forward, 1.0f);
+	}
+	
 
 	// 血条材质更新（已经设置好了，只需要PrograssAlpha与HealthRate）
 	ValueMaterial->SetScalarParameterValue("PrograssAlpha", ValueRate);

@@ -9,6 +9,9 @@
 // 注册积分改变事件
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCreditsChanged, ASPlayerState*, PlayerState, int32, NewCredits, int32, Delta);
 
+
+class USSaveGame;
+
 /**
  * 
  */
@@ -34,6 +37,12 @@ public:
 	// 积分减少
 	UFUNCTION(BlueprintCallable, Category = "Credits")
 	bool RemoveCredits(int32 Delta);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void SavePlayerState(USSaveGame* SaveObject);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void LoadPlayerState(USSaveGame* SaveObject);
 
 	UPROPERTY(BlueprintAssignable, Category = "Credits")
 	FOnCreditsChanged OnCreditsChanged;
