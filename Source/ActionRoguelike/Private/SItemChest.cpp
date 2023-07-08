@@ -26,7 +26,17 @@ ASItemChest::ASItemChest()
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(Treasure);
 
+	// 网络相关
+	SetReplicateMovement(true);
+	/////////////////////////////////////////////////////////////// 这个在C++里是啥？
+	/*BaseMesh->ComponentReplicated=true;*/
+
 	SetReplicates(true);
+}
+
+void ASItemChest::OnActorLoaded_Implementation()
+{
+	OnRep_LidOpened();
 }
 
 // 交互接口
@@ -56,7 +66,7 @@ void ASItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 void ASItemChest::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame

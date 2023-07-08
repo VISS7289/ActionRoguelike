@@ -25,4 +25,8 @@ public:
 	// 交互接口
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Interact(APawn* InstigatorPawn);
+
+	// 加载接口
+	UFUNCTION(BlueprintNativeEvent)
+	void OnActorLoaded();
 };

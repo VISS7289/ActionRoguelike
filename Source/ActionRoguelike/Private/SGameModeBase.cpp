@@ -16,6 +16,9 @@
 #include "SSaveGame.h"
 #include "GameFramework/GameStateBase.h"
 #include "SGmeplayInterface.h"
+#include "Serialization/NameAsStringProxyArchive.h"
+#include "Serialization/MemoryWriter.h"
+#include "Serialization/MemoryReader.h"
 
 
 
@@ -209,6 +212,11 @@ void ASGameModeBase::WriteSaveGame()
 		ActorData.ActorName = Actor->GetName();
 		ActorData.Transform = Actor->GetActorTransform();
 
+		FMemoryWriter MemWriter(ActorData.ByteData);
+		FNameAsStringProxyArchive Ar(MemWriter);
+		Ar.ArIsSaveGame = true;
+		Actor->Serialize(Ar);
+
 		CurrentSaveGame->SaveActors.Add(ActorData);
 
 	}
@@ -246,6 +254,14 @@ void ASGameModeBase::LoadSaveGame()
 				if (ActorData.ActorName == Actor->GetName())
 				{
 					Actor->SetActorTransform(ActorData.Transform);
+
+					FMemoryReader MemReader(ActorData.ByteData);
+					FNameAsStringProxyArchive Ar(MemReader);
+					Ar.ArIsSaveGame = true;
+					Actor->Serialize(Ar);
+
+					ISGmeplayInterface::Execute_OnActorLoaded(Actor);
+
 					break;
 				}
 			}
@@ -265,12 +281,15 @@ void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* N
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 
+	///////////////////////////////////////////////////////////////////
 	CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
 	if (CurrentSaveGame == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed To Load SaveGame Data."));
 		return;
 	}
+	///////////////////////////////////////////////////////////////////
+
 
 	ASPlayerState* PS = NewPlayer->GetPlayerState<ASPlayerState>();
 	if (PS)

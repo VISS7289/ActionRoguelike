@@ -25,6 +25,9 @@ public:
 
 	// 交互接口
 	void Interact_Implementation(APawn* InstigatorPawn);
+
+	// 加载接口
+	void OnActorLoaded_Implementation();
 	
 public:	
 	// Sets default values for this actor's properties
@@ -44,7 +47,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* EffectComp; // 粒子系统
 
-	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened")
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", SaveGame)
 	bool bLidOpened;
 
 	UFUNCTION()
