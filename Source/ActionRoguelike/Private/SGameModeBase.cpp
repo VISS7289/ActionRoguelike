@@ -15,6 +15,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "SSaveGame.h"
 #include "GameFramework/GameStateBase.h"
+#include "SGmeplayInterface.h"
+
 
 
 // 是否生成敌人AI作弊代码
@@ -30,11 +32,12 @@ ASGameModeBase::ASGameModeBase()
 	SlotName = "SaveGame01";
 }
 
+// LoadSaveGame的时候有的Actor在InitGame没加载出来，但是在StartPlay可以加载？？？？
 void ASGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	LoadSaveGame();
+	//LoadSaveGame();
 }
 
 void ASGameModeBase::StartPlay()
@@ -42,6 +45,8 @@ void ASGameModeBase::StartPlay()
 	Super::StartPlay();
 	// 每隔一段时间就重新生成AI
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimeInterval, true);
+
+	LoadSaveGame();
 }
 
 // 死亡处理
@@ -188,6 +193,26 @@ void ASGameModeBase::WriteSaveGame()
 		}
 	}
 
+	CurrentSaveGame->SaveActors.Empty();
+
+	// 遍历世界中的所有Actor
+	for (FActorIterator It(GetWorld()); It; ++It)
+	{
+		AActor* Actor = *It;
+		// 只处理可交互物体
+		if (!Actor->Implements<USGmeplayInterface>())
+		{
+			continue;
+		}
+
+		FActorSaveData ActorData;
+		ActorData.ActorName = Actor->GetName();
+		ActorData.Transform = Actor->GetActorTransform();
+
+		CurrentSaveGame->SaveActors.Add(ActorData);
+
+	}
+
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
 }
 
@@ -203,6 +228,30 @@ void ASGameModeBase::LoadSaveGame()
 		}
 
 		UE_LOG(LogTemp, Log, TEXT("Load SaveGame Data."));
+
+
+		// 遍历世界中的所有Actor
+		for (FActorIterator It(GetWorld()); It; ++It)
+		{
+			AActor* Actor = *It;
+			// 只处理可交互物体
+			if (!Actor->Implements<USGmeplayInterface>())
+			{
+				continue;
+			}
+
+			// 可交互物体的transform用保存的transform
+			for (FActorSaveData ActorData : CurrentSaveGame->SaveActors)
+			{
+				if (ActorData.ActorName == Actor->GetName())
+				{
+					Actor->SetActorTransform(ActorData.Transform);
+					break;
+				}
+			}
+
+		}
+
 	}
 	else
 	{
@@ -215,6 +264,13 @@ void ASGameModeBase::LoadSaveGame()
 void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
+	if (CurrentSaveGame == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed To Load SaveGame Data."));
+		return;
+	}
 
 	ASPlayerState* PS = NewPlayer->GetPlayerState<ASPlayerState>();
 	if (PS)

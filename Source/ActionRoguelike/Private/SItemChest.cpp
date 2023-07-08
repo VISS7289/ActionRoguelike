@@ -14,6 +14,7 @@ ASItemChest::ASItemChest()
 
 	// 添加箱子网格体组件
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
+	BaseMesh->SetSimulatePhysics(true);
 	RootComponent = BaseMesh;
 	// 添加盖子网格体组件
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
