@@ -14,6 +14,7 @@ USRageChangedWidget::USRageChangedWidget(const FObjectInitializer& ObjectInitial
 // 绑定事件函数
 void USRageChangedWidget::BindWithAttributeChanged(USAttributeComponent* AttributeComp)
 {
+	AttributeComp->OnRageChanged.RemoveAll(this);
 	AttributeComp->OnRageChanged.AddDynamic(this, &USRageChangedWidget::GetValueChange);
 }
 
@@ -23,5 +24,6 @@ void USRageChangedWidget::ValueInit(USAttributeComponent* AttributeComp)
 	// 根据属性组件更新UI参数
 	MaxValue = AttributeComp->GetRageMax();
 	ValueChangeCommon(AttributeComp->GetRage());
+	ValueMaterial->SetScalarParameterValue("PrograssAlpha", ValueRate);
 	
 }

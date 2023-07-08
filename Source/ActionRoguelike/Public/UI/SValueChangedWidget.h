@@ -52,6 +52,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void GetValueChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewValue, float Delta);
 
+	// 玩家改变时更新UI
+	UFUNCTION(BlueprintCallable)
+	void GetPlayerChange(APawn* InPawn);
+
 	// 普通更新生命值函数
 	bool ValueChangeCommon(float NewValue);
 

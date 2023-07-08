@@ -51,7 +51,7 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Del
 	float ActualDelta = NewHealth - OldHealth; // 实际变化量
 
 	// 客户端不处理生命变化
-	if (!GetOwner()->HasAuthority())
+	if (GetOwner()->HasAuthority())
 	{
 		Health = NewHealth;
 		if (ActualDelta != 0)
