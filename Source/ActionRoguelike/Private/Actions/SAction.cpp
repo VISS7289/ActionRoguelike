@@ -5,7 +5,7 @@
 #include "Engine/World.h"
 #include "Components/ActorComponent.h"
 #include "Component/SActionComponent.h"
-#include "SGameplayFunctionLibrary.h"
+#include "Game/SGameplayFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -28,7 +28,7 @@ bool USAction::CanStart_Implementation(AActor* InstigatorActor)
 }
 
 // 开始行动
-// 开始行动并且更新标签与Running
+// 开始行动并且更新标签与RepData
 void USAction::StartAction_Implementation(AActor* Instigator)
 {
 	UE_LOG(LogTemp, Log, TEXT("Running:%s"), *GetNameSafe(this));
@@ -43,7 +43,7 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 
 ///////////////////////////////////////////////////////////////后期要改///////////////////////////////////////////////////////
 // 结束行动
-// 结束行动并且更新标签与Running
+// 结束行动并且更新标签与RepData
 void USAction::StopAction_Implementation(AActor* Instigator)
 {
 	UE_LOG(LogTemp, Log, TEXT("Stopped:%s"), *GetNameSafe(this));
@@ -60,6 +60,8 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 }
 ///////////////////////////////////////////////////////////////后期要改///////////////////////////////////////////////////////
 
+// 返回UWorld
+// 如果正确构造SAction的话，所得Actor必定非空
 UWorld* USAction::GetWorld() const
 {
 	/*UActorComponent* ActorComp = Cast<UActorComponent>(GetOuter());*/
@@ -71,12 +73,14 @@ UWorld* USAction::GetWorld() const
 	return nullptr;
 }
 
-
+// 返回所在的ActionComponent
 USActionComponent* USAction::GetOwningComponent() const
 {
 	return ActionComp;
 }
 
+// 同步数据时
+// 数据同步后，根据RepData.Running执行开始或结束
 void USAction::OnRep_RepData()
 {
 	if (RepData.Running)

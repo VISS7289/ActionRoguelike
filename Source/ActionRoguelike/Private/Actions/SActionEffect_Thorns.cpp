@@ -4,7 +4,7 @@
 #include "Actions/SActionEffect_Thorns.h"
 #include "Component/SAttributeComponent.h"
 #include "Component/SActionComponent.h"
-#include "SGameplayFunctionLibrary.h"
+#include "Game/SGameplayFunctionLibrary.h"
 
 USActionEffect_Thorns::USActionEffect_Thorns()
 {
@@ -15,7 +15,7 @@ USActionEffect_Thorns::USActionEffect_Thorns()
 	Period = 0.0f;
 }
 
-// 监听生命值改变事件
+// Action开始时，监听生命值改变事件
 void USActionEffect_Thorns::StartAction_Implementation(AActor* Instigator)
 {
 	Super::StartAction_Implementation(Instigator);
@@ -27,7 +27,7 @@ void USActionEffect_Thorns::StartAction_Implementation(AActor* Instigator)
 	}
 }
 
-// 取消监听生命值改变事件
+// Action结束时，取消监听生命值改变事件
 void USActionEffect_Thorns::StopAction_Implementation(AActor* Instigator)
 {
 	Super::StopAction_Implementation(Instigator);
@@ -40,6 +40,7 @@ void USActionEffect_Thorns::StopAction_Implementation(AActor* Instigator)
 }
 
 // 生命值改变时反伤
+// 对敌人的伤害进行随机反伤
 void USActionEffect_Thorns::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
 	AActor* OwningActor = GetOwningComponent()->GetOwner();
@@ -53,10 +54,7 @@ void USActionEffect_Thorns::OnHealthChanged(AActor* InstigatorActor, USAttribute
 		{
 			return;
 		}
-
-		// 后面用的是伤害的绝对值
 		ReflectedAmount = FMath::Abs(ReflectedAmount);
-
 		// 反弹伤害
 		USGameplayFunctionLibrary::ApplyDamage(OwningActor, InstigatorActor, ReflectedAmount);
 	}

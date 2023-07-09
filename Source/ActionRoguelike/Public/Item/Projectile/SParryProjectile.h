@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Projectile/SProjectileBase.h"
+#include "Item/Projectile/SProjectileBase.h"
 #include "GameplayTagContainer.h"
 #include "SParryProjectile.generated.h"
 

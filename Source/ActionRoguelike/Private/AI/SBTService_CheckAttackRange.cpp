@@ -6,7 +6,8 @@
 #include "AIController.h"
 #include "Math/Vector.h"
 
-// 重载时刻节点，判断是否在攻击范围内
+// 重载时刻节点
+// 通过计算AI与目标的距离判断是否在攻击范围内
 void USBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);

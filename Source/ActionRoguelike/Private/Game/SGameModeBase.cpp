@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SGameModeBase.h"
+#include "Game/SGameModeBase.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
 #include "GameFramework/Actor.h"
@@ -10,12 +10,12 @@
 #include "Curves/CurveFloat.h"
 #include "EngineUtils.h"
 #include "DrawDebugHelpers.h"
-#include "SCharacter.h"
-#include "SPlayerState.h"
+#include "Player/SCharacter.h"
+#include "Player/SPlayerState.h"
 #include "Kismet/GameplayStatics.h"
-#include "SSaveGame.h"
+#include "Game/SSaveGame.h"
 #include "GameFramework/GameStateBase.h"
-#include "SGmeplayInterface.h"
+#include "Game/SGmeplayInterface.h"
 #include "Serialization/NameAsStringProxyArchive.h"
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/MemoryReader.h"
@@ -183,6 +183,7 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 	}
 }
 
+// 保存游戏
 // Why? GameState为啥不用声明？为啥#include "GameFramework/GameStateBase.h"就行？
 void ASGameModeBase::WriteSaveGame()
 {
@@ -207,16 +208,16 @@ void ASGameModeBase::WriteSaveGame()
 		{
 			continue;
 		}
-
+		// 保存Actor的名称与位置
 		FActorSaveData ActorData;
 		ActorData.ActorName = Actor->GetName();
 		ActorData.Transform = Actor->GetActorTransform();
-
+		// 保存状态
 		FMemoryWriter MemWriter(ActorData.ByteData);
 		FNameAsStringProxyArchive Ar(MemWriter);
 		Ar.ArIsSaveGame = true;
 		Actor->Serialize(Ar);
-
+		// 保存
 		CurrentSaveGame->SaveActors.Add(ActorData);
 
 	}
@@ -224,9 +225,10 @@ void ASGameModeBase::WriteSaveGame()
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
 }
 
+// 加载游戏
 void ASGameModeBase::LoadSaveGame()
 {
-	if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
+	if (UGameplayStatics::DoesSaveGameExist(SlotName, 0)) // 存在保存的游戏
 	{
 		CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
 		if (CurrentSaveGame == nullptr)
@@ -254,7 +256,7 @@ void ASGameModeBase::LoadSaveGame()
 				if (ActorData.ActorName == Actor->GetName())
 				{
 					Actor->SetActorTransform(ActorData.Transform);
-
+					// 设置状态信息
 					FMemoryReader MemReader(ActorData.ByteData);
 					FNameAsStringProxyArchive Ar(MemReader);
 					Ar.ArIsSaveGame = true;
@@ -269,7 +271,7 @@ void ASGameModeBase::LoadSaveGame()
 		}
 
 	}
-	else
+	else 
 	{
 		CurrentSaveGame = Cast<USSaveGame>(UGameplayStatics::CreateSaveGameObject(USSaveGame::StaticClass()));
 

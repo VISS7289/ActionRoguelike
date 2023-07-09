@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Projectile/SParryProjectile.h"
+#include "Item/Projectile/SParryProjectile.h"
 #include "Component/SActionComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "SGameplayFunctionLibrary.h"
+#include "Game/SGameplayFunctionLibrary.h"
 #include "Actions/SActionEffect.h"
 
 

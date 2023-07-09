@@ -55,7 +55,7 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	AActor* GetTargetActor() const;
 
-	// 注意到玩家时，打印调试信息与设置黑板注意对象
+	// 注意到玩家时
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 

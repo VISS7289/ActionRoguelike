@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SPowerupActor.h"
+#include "Item/PowerUp/SPowerupActor.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 

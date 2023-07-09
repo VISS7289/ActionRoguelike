@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Projectile/SProjectileBase.h"
+#include "Item/Projectile/SProjectileBase.h"
 #include "Components/SphereComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Components/AudioComponent.h"
@@ -10,7 +10,7 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "Component/SAttributeComponent.h"
-#include "SGameplayFunctionLibrary.h"
+#include "Game/SGameplayFunctionLibrary.h"
 
 
 

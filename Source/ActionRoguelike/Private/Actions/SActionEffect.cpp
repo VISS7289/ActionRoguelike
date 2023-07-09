@@ -17,7 +17,7 @@ USActionEffect::USActionEffect()
 void USActionEffect::StartAction_Implementation(AActor* InstigatorActor)
 {
 	Super::StartAction_Implementation(InstigatorActor);
-
+	// 持续时间,到达一定时间后停止
 	if (Duration > 0)
 	{
 		FTimerDelegate Delegate;
@@ -25,7 +25,7 @@ void USActionEffect::StartAction_Implementation(AActor* InstigatorActor)
 
 		GetWorld()->GetTimerManager().SetTimer(DurationHandle, Delegate, Duration, false);
 	}
-
+	// 周期效果，到达一定时间后执行周期效果
 	if (Period > 0)
 	{
 		FTimerDelegate Delegate;

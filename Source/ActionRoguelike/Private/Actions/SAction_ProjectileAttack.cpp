@@ -13,7 +13,7 @@ USAction_ProjectileAttack::USAction_ProjectileAttack()
 }
 
 // 开始远程攻击行动
-// 获取到执行角色后，该角色播放攻击蒙太奇并延时触发攻击
+// 获取到执行角色后，仅服务端执行该角色播放攻击蒙太奇并延时触发攻击
 void USAction_ProjectileAttack::StartAction_Implementation(AActor* InstigatorActor)
 {
 	Super::StartAction_Implementation(InstigatorActor);

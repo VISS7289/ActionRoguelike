@@ -40,6 +40,7 @@ protected:
 	UPROPERTY(Replicated)
 	TObjectPtr<USActionComponent> ActionComp;
 
+	// 返回所在的ActionComponent
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	USActionComponent* GetOwningComponent() const;
 
@@ -50,9 +51,10 @@ protected:
 	FGameplayTagContainer BlockedTags; // 阻挡标签
 
 	UPROPERTY(ReplicatedUsing = "OnRep_RepData")
-	FActionRepData RepData;
+	FActionRepData RepData; // 同步的数据
 	//int Running = 0; // 运行状态
 
+	// 同步数据时
 	UFUNCTION()
 	void OnRep_RepData();
 
@@ -81,6 +83,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
 
+	// 返回UWorld
 	virtual UWorld* GetWorld() const override;
 
 	bool IsSupportedForNetworking() const override

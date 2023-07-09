@@ -36,9 +36,11 @@ public:
 	UFUNCTION(Exec)
 	void KillAll();
 
+	// 保存游戏
 	UFUNCTION(BlueprintCallable, Category = "SaveGame")
 	void WriteSaveGame();
 
+	// 加载游戏
 	void LoadSaveGame();
 
 	void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;

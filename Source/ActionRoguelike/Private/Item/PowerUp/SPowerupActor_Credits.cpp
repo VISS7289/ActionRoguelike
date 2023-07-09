@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SPowerupActor_Credits.h"
-#include "SPlayerState.h"
+#include "Item/PowerUp/SPowerupActor_Credits.h"
+#include "Player/SPlayerState.h"
 
 ASPowerupActor_Credits::ASPowerupActor_Credits()
 {

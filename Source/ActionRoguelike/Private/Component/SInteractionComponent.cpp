@@ -4,7 +4,7 @@
 #include "Component/SInteractionComponent.h"
 #include "Engine/EngineTypes.h"
 #include "CollisionQueryParams.h"
-#include "SGmeplayInterface.h"
+#include "Game/SGmeplayInterface.h"
 #include "DrawDebugHelpers.h"
 #include "CollisionShape.h"
 #include "Camera/CameraComponent.h"

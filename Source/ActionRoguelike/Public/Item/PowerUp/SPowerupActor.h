@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SGmeplayInterface.h"
+#include "Game/SGmeplayInterface.h"
 #include "SPowerupActor.generated.h"
 
 

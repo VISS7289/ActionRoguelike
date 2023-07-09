@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "STargetDummy.h"
+#include "Item/STargetDummy.h"
 #include "Components/StaticMeshComponent.h"
 #include "Component/SAttributeComponent.h"
 

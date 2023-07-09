@@ -2,7 +2,7 @@
 
 
 #include "Component/SAttributeComponent.h"
-#include "SGameModeBase.h"
+#include "Game/SGameModeBase.h"
 #include "Net/UnrealNetwork.h"
 
 // 伤害倍乘作弊代码
@@ -59,6 +59,7 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatordActor, float Del
 			MulticastHealthChanged(InstigatordActor, Health, ActualDelta);
 		}
 
+		//  死亡处理
 		if (Delta < 0.0f && Health <= 0.0f)
 		{
 			ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Projectile/SBlackHoleProjectile.h"
+#include "Item/Projectile/SBlackHoleProjectile.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 #include "Components/SphereComponent.h"
 

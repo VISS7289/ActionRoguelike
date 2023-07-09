@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SGameplayFunctionLibrary.h"
+#include "Game/SGameplayFunctionLibrary.h"
 #include "Component/SAttributeComponent.h"
 #include "Components/PrimitiveComponent.h"
 

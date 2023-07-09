@@ -3,7 +3,7 @@
 
 #include "Component/SActionComponent.h"
 #include "Actions/SAction.h"
-#include "SGameplayFunctionLibrary.h"
+#include "Game/SGameplayFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 
@@ -25,7 +25,7 @@ void USActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(USActionComponent, Actions);
 }
 
-// Called when the game starts
+// 开始游戏时仅在服务器初始化Actions
 void USActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -42,7 +42,7 @@ void USActionComponent::BeginPlay()
 }
 
 
-// Called every frame
+// Debug查看Action状态
 void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -50,20 +50,21 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	//FString DebugMsg = GetNameSafe(GetOwner()) + " : " + ActiveGameplayTags.ToStringSimple();
 	//GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::White, DebugMsg);
 
-	for (USAction* Action : Actions)
-	{
-		FColor TextColor = Action->IsRunning() ? FColor::Blue : FColor::White;
-		FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s ; Outer: %s"),
-			*GetNameSafe(GetOwner()),
-			*GetNameSafe(Action),
-			*GetNameSafe(Action->GetOuter()));
+	//// Debug查看Action状态
+	//for (USAction* Action : Actions)
+	//{
+	//	FColor TextColor = Action->IsRunning() ? FColor::Blue : FColor::White;
+	//	FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s ; Outer: %s"),
+	//		*GetNameSafe(GetOwner()),
+	//		*GetNameSafe(Action),
+	//		*GetNameSafe(Action->GetOuter()));
 
-		USGameplayFunctionLibrary::LogOnScreen(this, ActionMsg, TextColor, 0.0f);
-	}
+	//	USGameplayFunctionLibrary::LogOnScreen(this, ActionMsg, TextColor, 0.0f);
+	//}
 }
 
 // 添加行动
-// 根据类引用来添加具体的行动
+// 服务器根据类引用来添加具体的行动
 void USActionComponent::AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass)
 {
 	if (!ensure(ActionClass))

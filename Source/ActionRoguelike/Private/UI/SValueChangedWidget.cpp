@@ -6,7 +6,7 @@
 #include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
 #include "Materials/MaterialInstanceDynamic.h"
-#include "SPlayerController.h"
+#include "Player/SPlayerController.h"
 #include "GameFramework/PlayerController.h"
 
 

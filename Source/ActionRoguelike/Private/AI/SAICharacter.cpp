@@ -35,17 +35,17 @@ ASAICharacter::ASAICharacter()
 
 }
 
-// 注册事件回调函数
+// 监听注意到对象与生命改变
 void ASAICharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	// 看到玩家时设置注意对象
+
 	PawnSensingComponent->OnSeePawn.AddDynamic(this, &ASAICharacter::OnPawnSeen);
-	// 生命值改变时
 	AttributeComp->OnHealthChanged.AddDynamic(this, &ASAICharacter::GetHealthChange);
 }
 
-// 注意到玩家时，打印调试信息与设置黑板注意对象
+// 注意到玩家时
+// 打印调试信息与设置黑板注意对象，并显示提示UI
 void ASAICharacter::OnPawnSeen(APawn* Pawn)
 {
 	if (GetTargetActor() != Pawn)
@@ -114,13 +114,12 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 }
 
 // 设置攻击对象
+// 将黑板中的TargetActor设置为NewTarget
 void ASAICharacter::SetTargetActor(AActor* NewTarget)
 {
-	// 获取AI控制器
 	AAIController* AIC = Cast<AAIController>(GetController());
 	if (AIC)
 	{
-		// 设置目标
 		AIC->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
 
 	}

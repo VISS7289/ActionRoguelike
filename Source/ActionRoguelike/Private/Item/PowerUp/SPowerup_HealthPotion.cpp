@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SPowerup_HealthPotion.h"
+#include "Item/PowerUp/SPowerup_HealthPotion.h"
 #include "Component/SAttributeComponent.h"
-#include "SPlayerState.h"
+#include "Player/SPlayerState.h"
 
 ASPowerup_HealthPotion::ASPowerup_HealthPotion()
 {

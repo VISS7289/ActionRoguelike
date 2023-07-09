@@ -29,9 +29,10 @@ protected:
 
 public:
 
-
+	// Action开始时，监听生命值改变事件
 	virtual void StartAction_Implementation(AActor* Instigator) override;
 
+	// Action结束时，取消监听生命值改变事件
 	virtual void StopAction_Implementation(AActor* Instigator) override;
 
 	USActionEffect_Thorns();
