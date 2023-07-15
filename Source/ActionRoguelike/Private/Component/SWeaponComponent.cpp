@@ -22,7 +22,7 @@ USWeaponComponent::USWeaponComponent()
 }
 
 // 开火
-TSubclassOf<ASProjectileBase> USWeaponComponent::Fire()
+TSubclassOf<AActor> USWeaponComponent::Fire()
 {
 	// 保证有子弹
 	if (BulletInGun.Num() <= 0)
@@ -34,7 +34,7 @@ TSubclassOf<ASProjectileBase> USWeaponComponent::Fire()
 }
 
 // 装弹
-void USWeaponComponent::AddBullet(TSubclassOf<ASProjectileBase> ProjectileClass)
+void USWeaponComponent::AddBullet(TSubclassOf<AActor> ProjectileClass)
 {
 	// 不能超上限；
 	if (BulletInGun.Num() >= BulletNumMax)
@@ -76,7 +76,7 @@ void USWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	AddAll();
 	
 }
 
@@ -89,3 +89,12 @@ void USWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	// ...
 }
 
+USWeaponComponent* USWeaponComponent::GetWeaponComp(AActor* FromActor)
+{
+	if (FromActor)
+	{
+		return Cast<USWeaponComponent>(FromActor->GetComponentByClass(USWeaponComponent::StaticClass()));
+	}
+
+	return nullptr;
+}

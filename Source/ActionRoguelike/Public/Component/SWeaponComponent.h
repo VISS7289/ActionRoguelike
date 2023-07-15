@@ -18,25 +18,29 @@ public:
 	// Sets default values for this component's properties
 	USWeaponComponent();
 
+	// 返回Actor上的USWeaponComponent
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	static USWeaponComponent* GetWeaponComp(AActor* FromActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	TSubclassOf<AActor> Fire(); // 开火
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void AddBullet(TSubclassOf<AActor> ProjectileClass); // 装弹
+
 protected:
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	UStaticMeshComponent* WeaponMesh; // 枪械网格体
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	TSubclassOf<ASProjectileBase> DefaultBullet; // 默认子弹
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	int32 BulletNumMax; // 子弹上限
 
 	UPROPERTY(BlueprintReadWrite)
-	TArray<TSubclassOf<ASProjectileBase>> BulletInGun; // 枪械中现存子弹
-
-	UFUNCTION(BlueprintCallable)
-	TSubclassOf<ASProjectileBase> Fire(); // 开火
-
-	UFUNCTION(BlueprintCallable)
-	void AddBullet(TSubclassOf<ASProjectileBase> ProjectileClass); // 装弹
+	TArray<TSubclassOf<AActor>> BulletInGun; // 枪械中现存子弹
 
 	UFUNCTION(BlueprintCallable)
 	void AddAll(); // 装满

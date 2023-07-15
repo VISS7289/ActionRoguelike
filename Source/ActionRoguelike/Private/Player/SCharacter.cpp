@@ -15,6 +15,7 @@
 #include "Component/SInteractionComponent.h"
 #include "Component/SAttributeComponent.h"
 #include "Component/SActionComponent.h"
+#include "Component/SWeaponComponent.h"
 #include "CollisionShape.h"
 #include "CollisionQueryParams.h"
 
@@ -38,6 +39,8 @@ ASCharacter::ASCharacter()
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 	// 添加行动组件
 	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
+	// 武器组件
+	WeaponComp = CreateDefaultSubobject<USWeaponComponent>("WeaponComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝运动方向旋转
 	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转
@@ -181,7 +184,7 @@ void ASCharacter::PrimaryParry()
 void ASCharacter::PrimaryAttack()
 {
 
-	ActionComp->StartActionByName(this, "PrimaryAttack");
+	ActionComp->StartActionByName(this, "Fire");
 }
 
 // 冲刺(目前冲刺逻辑是释放冲刺子弹，所以内容和普通攻击一样了。。)
