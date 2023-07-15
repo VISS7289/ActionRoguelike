@@ -187,7 +187,9 @@ void ASCharacter::PrimaryAttack()
 // 冲刺(目前冲刺逻辑是释放冲刺子弹，所以内容和普通攻击一样了。。)
 void ASCharacter::PrimaryDash()
 {
-	ActionComp->StartActionByName(this, "PrimaryDash");
+	//ActionComp->StartActionByName(this, "PrimaryDash");
+	ActionComp->StartActionByName(this, "Dash");
+	
 }
 
 // 加速开始
