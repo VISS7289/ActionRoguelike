@@ -29,7 +29,7 @@ bool USAction::CanStart_Implementation(AActor* InstigatorActor)
 
 // 开始行动
 // 开始行动并且更新标签与RepData
-void USAction::StartAction_Implementation(AActor* Instigator)
+void USAction::StartAction_Implementation(AActor* InstigatorActor)
 {
 	UE_LOG(LogTemp, Log, TEXT("Running:%s"), *GetNameSafe(this));
 	//USGameplayFunctionLibrary::LogOnScreen(this, FString::Printf(TEXT("Running:%s"), *GetNameSafe(this)), FColor::Green);
@@ -38,13 +38,13 @@ void USAction::StartAction_Implementation(AActor* Instigator)
 	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
 
 	RepData.Running++;
-	RepData.InstigatorActor = Instigator;
+	RepData.InstigatorActor = InstigatorActor;
 }
 
 ///////////////////////////////////////////////////////////////后期要改///////////////////////////////////////////////////////
 // 结束行动
 // 结束行动并且更新标签与RepData
-void USAction::StopAction_Implementation(AActor* Instigator)
+void USAction::StopAction_Implementation(AActor* InstigatorActor)
 {
 	UE_LOG(LogTemp, Log, TEXT("Stopped:%s"), *GetNameSafe(this));
 	//USGameplayFunctionLibrary::LogOnScreen(this, FString::Printf(TEXT("Stopped:%s"), *GetNameSafe(this)), FColor::White);
@@ -56,7 +56,7 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 
 	//Running--; 后期要改
 	RepData.Running = 0;
-	RepData.InstigatorActor = Instigator;
+	RepData.InstigatorActor = InstigatorActor;
 }
 ///////////////////////////////////////////////////////////////后期要改///////////////////////////////////////////////////////
 

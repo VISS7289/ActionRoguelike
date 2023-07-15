@@ -99,6 +99,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimarySprintRelease;
 
+	// 蓄力
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AccumulateDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AccumulateRelease;
+
 	// 必杀
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryMustKillAction;
@@ -126,6 +132,11 @@ protected:
 	void PrimarySprintStart();
 	// 加速结束
 	void PrimarySprintEnd();
+
+	// 蓄力开始
+	void AccumulateStart();
+	// 蓄力结束
+	void AccumulateEnd();
 
 	// 必杀
 	void PrimaryMustKill();

@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void AddBullet(TSubclassOf<AActor> ProjectileClass); // ×°µ¯
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	bool CanFire();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")

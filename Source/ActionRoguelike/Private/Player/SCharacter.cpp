@@ -75,6 +75,12 @@ void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//// Use the mouse scroll wheel to zoom in and out
+	//float ZoomSpeed = 1.0f;
+	//FVector newLocation = SpringArmComp->GetRelativeLocation() + SpringArmComp->GetForwardVector()* ZoomSpeed;
+	//SpringArmComp->SetRelativeLocation(newLocation);
+
+
 }
 
 // Called to bind functionality to input
@@ -100,6 +106,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(PrimarySprintDown, ETriggerEvent::Started, this, &ASCharacter::PrimarySprintStart);
 		// 加速结束
 		EnhancedInputComponent->BindAction(PrimarySprintRelease, ETriggerEvent::Triggered, this, &ASCharacter::PrimarySprintEnd);
+		// 蓄力开始
+		EnhancedInputComponent->BindAction(AccumulateDown, ETriggerEvent::Started, this, &ASCharacter::AccumulateStart);
+		// 蓄力结束
+		EnhancedInputComponent->BindAction(AccumulateRelease, ETriggerEvent::Triggered, this, &ASCharacter::AccumulateEnd);
 		// 必杀
 		EnhancedInputComponent->BindAction(PrimaryMustKillAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryMustKill);
 		// 交互物体
@@ -209,6 +219,19 @@ void ASCharacter::PrimarySprintEnd()
 {
 	UE_LOG(LogTemp, Log, TEXT("Sprint End"));
 	ActionComp->StopActionByName(this, "Sprint");
+}
+
+// 蓄力开始
+void ASCharacter::AccumulateStart()
+{
+	UE_LOG(LogTemp, Log, TEXT("Accumulate Start"));
+	ActionComp->StartActionByName(this, "Accumulate");
+}
+// 蓄力结束
+void ASCharacter::AccumulateEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Accumulate End"));
+	ActionComp->StopActionByName(this, "Accumulate");
 }
 
 // 必杀(目前必杀逻辑是释放黑洞，所以内容和普通攻击一样了。。)

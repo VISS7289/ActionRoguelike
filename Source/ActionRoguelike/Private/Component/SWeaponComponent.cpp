@@ -98,3 +98,8 @@ USWeaponComponent* USWeaponComponent::GetWeaponComp(AActor* FromActor)
 
 	return nullptr;
 }
+
+bool USWeaponComponent::CanFire()
+{
+	return BulletInGun.Num() > 0;
+}

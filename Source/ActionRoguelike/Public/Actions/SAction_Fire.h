@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actions/SAction.h"
+#include "Actions/SActionWeapon.h"
 #include "SAction_Fire.generated.h"
 
 class USWeaponComponent;
@@ -12,32 +12,16 @@ class USWeaponComponent;
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API USAction_Fire : public USAction
+class ACTIONROGUELIKE_API USAction_Fire : public USActionWeapon
 {
 	GENERATED_BODY()
 	
-protected:
-
-	UPROPERTY()
-	USWeaponComponent* WeaponComp;
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnim; // 普通攻击蒙太奇
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	FName HandSocketName; // 发射抛射物插槽名称
-
-	FTimerHandle TimerHandle_PrimaryAttack; // 延时
-
-	// 实施攻击
-	UFUNCTION()
-	void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);
-
 public:
 
-	// 开始远程攻击行动
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 
-	USAction_Fire();
+protected:
+
+	virtual void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);
 
 };
