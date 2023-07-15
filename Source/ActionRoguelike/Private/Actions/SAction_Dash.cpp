@@ -7,8 +7,7 @@
 
 USAction_Dash::USAction_Dash()
 {
-    DashLength = 500.0f; 
-    HasInit = false;
+    DashLength = 500.0f; // 冲刺距离
 }
 
 // 冲刺TimeLine设置
@@ -33,9 +32,9 @@ void USAction_Dash::SetupTimeline()
 // TimeLine播放过程中
 void USAction_Dash::TimelineProgressFunction(float Value)
 {
-    // Do something with the timeline value
+    // 插值
     NowPos = UKismetMathLibrary::VLerp(StartPos, EndPos, Value);
-
+    // 实时更新玩家位置
     if (!DashActor->SetActorLocation(NowPos, true))
     {
         CurveTimeline.Stop();
@@ -73,6 +72,7 @@ void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
     CurveTimeline.PlayFromStart();
 }
 
+// 每Tick更新Timeline
 void USAction_Dash::Tick(float DeltaTime)
 {
     CurveTimeline.TickTimeline(DeltaTime);

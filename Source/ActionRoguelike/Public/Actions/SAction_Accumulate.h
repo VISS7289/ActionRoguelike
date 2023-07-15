@@ -11,8 +11,6 @@
 
 class USpringArmComponent; // 弹簧臂组件
 
-class UTimelineComponent;
-
 /**
  * 
  */
@@ -26,7 +24,7 @@ public:
 	USAction_Accumulate();
 
 public:
-
+	// 抽象类FTickableGameObject必须重载的函数
 	virtual TStatId GetStatId() const override
 	{
 		RETURN_QUICK_DECLARE_CYCLE_STAT(MyBPObject, STATGROUP_Tickables);
@@ -35,23 +33,23 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-
+	// Timeline相关
 	bool HasInit;
 	FTimeline CurveTimeline;
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UCurveFloat* Curve;
 
+	// 相机聚焦相关
 	float CameraAccumulate;
 	FVector StartPos;
 	FVector NowPos;
 	FVector EndPos;
-
 	UPROPERTY()
 	USpringArmComponent* SpringArmComp; // 弹簧臂组件
 
+	// 聚焦状态相关
 	UPROPERTY(EditDefaultsOnly, Category = "Accumulate")
 	float MaxAccumulateTime;
-
 	float CurrentAccumulateTime;
 
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;

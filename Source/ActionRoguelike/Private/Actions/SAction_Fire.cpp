@@ -34,6 +34,7 @@ void USAction_Fire::StartAction_Implementation(AActor* InstigatorActor)
 
 }
 
+// ¹¥»÷½áÊøºó½áÊøAction
 void USAction_Fire::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 {
 	Super::AttackDelay_Elapsed(InstigatorCharacter);

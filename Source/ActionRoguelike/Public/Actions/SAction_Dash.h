@@ -26,6 +26,7 @@ public:
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 
 public:
+	// 抽象类FTickableGameObject必须重载的函数
 	virtual TStatId GetStatId() const override
 	{
 		RETURN_QUICK_DECLARE_CYCLE_STAT(MyBPObject, STATGROUP_Tickables);
@@ -35,15 +36,14 @@ public:
 
 protected:
 
+	// Timeline相关
 	bool HasInit;
-
 	FTimeline CurveTimeline;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UCurveFloat* Curve;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
-	float DashLength;
+	float DashLength; // 冲刺距离
 	UPROPERTY()
 	FVector StartPos;
 	UPROPERTY()
