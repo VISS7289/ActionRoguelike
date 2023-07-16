@@ -18,6 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	ASWeakness();
 
+	void SetAttrComp(USAttributeComponent* AttrComp);
+
 protected:
 	
 	UPROPERTY(VisibleAnywhere)
@@ -35,7 +37,5 @@ protected:
 	// »ıµ„…À∫¶¥¶¿Ì
 	UFUNCTION()
 	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
-
-	virtual void BeginPlay() override;
 
 };

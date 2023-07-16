@@ -12,6 +12,7 @@ class USAttributeComponent; // 属性组件
 class UUserWidget; // UI
 class USWorldUserWidget; // AI血条UI
 class USActionComponent; // 行动组件
+class USWeaknessComponent; // 弱点组件
 
 UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
@@ -44,6 +45,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USActionComponent* ActionComp; // 行动组件
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	USWeaknessComponent* WeaknessComp; // 弱点组件
+	 
 	// 注册事件回调函数
 	virtual void PostInitializeComponents() override;
 

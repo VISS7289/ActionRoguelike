@@ -19,12 +19,11 @@ ASWeakness::ASWeakness()
 	DamageMultiply = 2.0f;
 }
 
-void ASWeakness::BeginPlay()
+void ASWeakness::SetAttrComp(USAttributeComponent* AttrComp)
 {
-	Super::BeginPlay();
-
-	OwnerAttributeComp = USAttributeComponent::GetAttributes(GetInstigator());
+	OwnerAttributeComp = AttrComp;
 }
+
 
 // 弱点伤害处理
 // 角色受到伤害后，如果该部位为弱点，追加伤害

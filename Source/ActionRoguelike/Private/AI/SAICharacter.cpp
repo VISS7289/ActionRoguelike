@@ -14,6 +14,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/SAttributeComponent.h"
 #include "Component/SActionComponent.h"
+#include "Component/SWeaknessComponent.h"
 
 
 // Sets default values
@@ -26,6 +27,8 @@ ASAICharacter::ASAICharacter()
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 	// 添加行动组件
 	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
+	// 添加弱点组件
+	WeaknessComp = CreateDefaultSubobject<USWeaknessComponent>("WeaknessComp");
 
 	// 放置或生成时自动添加AI控制器
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -107,6 +110,8 @@ void ASAICharacter::GetHealthChange(AActor* InstigatordActor, USAttributeCompone
 			// 取消胶囊体碰撞
 			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			GetCharacterMovement()->DisableMovement();
+			// 销毁弱点
+			WeaknessComp->DestoryAllWeakness();
 			// 10s后销毁自身
 			SetLifeSpan(10.0f);
 		}
