@@ -105,6 +105,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AccumulateRelease;
 
+	// 子弹种类左右切换
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletTypeRightAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BulletTypeLeftAction;
+
 	// 必杀
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryMustKillAction;
@@ -137,6 +143,11 @@ protected:
 	void AccumulateStart();
 	// 蓄力结束
 	void AccumulateEnd();
+
+	// 子弹向右切换
+	void BulletTypeRight();
+	// 子弹向左切换
+	void BulletTypeLeft();
 
 	// 必杀
 	void PrimaryMustKill();

@@ -16,7 +16,10 @@ USActionWeapon::USActionWeapon()
 // еп╤ойг╥Я©ирт╧╔╩В
 bool USActionWeapon::CanStart_Implementation(AActor* InstigatorActor)
 {
-	Super::CanStart_Implementation(InstigatorActor);
+	if (!Super::CanStart_Implementation(InstigatorActor))
+	{
+		return false;
+	}
 
 	if (!WeaponComp)
 	{

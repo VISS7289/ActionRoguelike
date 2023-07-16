@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Containers/Queue.h"
 #include "SWeaponComponent.generated.h"
 
 class UStaticMeshComponent; // 静态网格体
@@ -31,22 +32,35 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool CanFire();
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void BulletTypeRight(); // 向右旋转
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void BulletTypeLeft(); // 向左旋转
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	UStaticMeshComponent* WeaponMesh; // 枪械网格体
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<ASProjectileBase> DefaultBullet; // 默认子弹
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<AActor> DefaultBullet; // 默认子弹
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	int32 BulletNumMax; // 子弹上限
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	TArray<TSubclassOf<AActor>> BulletInGun; // 枪械中现存子弹
+
+	int32 NowBulletType;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TArray<TSubclassOf<AActor>> BulletType;
 
 	UFUNCTION(BlueprintCallable)
 	void AddAll(); // 装满
+
+	TSubclassOf<AActor> BulletPop();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;

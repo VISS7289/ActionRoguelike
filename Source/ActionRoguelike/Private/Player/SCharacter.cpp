@@ -110,6 +110,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(AccumulateDown, ETriggerEvent::Started, this, &ASCharacter::AccumulateStart);
 		// 蓄力结束
 		EnhancedInputComponent->BindAction(AccumulateRelease, ETriggerEvent::Triggered, this, &ASCharacter::AccumulateEnd);
+		// 子弹向右切换
+		EnhancedInputComponent->BindAction(BulletTypeRightAction, ETriggerEvent::Triggered, this, &ASCharacter::BulletTypeRight);
+		// 子弹向左切换
+		EnhancedInputComponent->BindAction(BulletTypeLeftAction, ETriggerEvent::Triggered, this, &ASCharacter::BulletTypeLeft);
 		// 必杀
 		EnhancedInputComponent->BindAction(PrimaryMustKillAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryMustKill);
 		// 交互物体
@@ -232,6 +236,19 @@ void ASCharacter::AccumulateEnd()
 {
 	UE_LOG(LogTemp, Log, TEXT("Accumulate End"));
 	ActionComp->StopActionByName(this, "Accumulate");
+}
+
+// 子弹向右切换
+void ASCharacter::BulletTypeRight()
+{
+	UE_LOG(LogTemp, Log, TEXT("BulletTypeRight"));
+	ActionComp->StartActionByName(this, "BulletTypeRight");
+}
+// 子弹向左切换
+void ASCharacter::BulletTypeLeft()
+{
+	UE_LOG(LogTemp, Log, TEXT("BulletTypeLeft"));
+	ActionComp->StartActionByName(this, "BulletTypeLeft");
 }
 
 // 必杀(目前必杀逻辑是释放黑洞，所以内容和普通攻击一样了。。)

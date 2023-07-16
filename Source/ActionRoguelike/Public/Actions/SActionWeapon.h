@@ -32,7 +32,7 @@ protected:
 
 	// ÊµÊ©¹¥»÷
 	UFUNCTION()
-	void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);
+	virtual void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);
 
 public:
 
