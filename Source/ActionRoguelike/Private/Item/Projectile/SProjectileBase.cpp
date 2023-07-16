@@ -81,7 +81,7 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 
 void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ensure(HitEffect) && OtherActor && OtherActor != GetInstigator())
+	if (ensure(HitEffect) && OtherActor && OtherActor != GetInstigator() && OtherActor->GetInstigator() != GetInstigator())
 	{
 		USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, Damage, SweepResult);
 		USGameplayFunctionLibrary::ApplyRage(GetInstigator(), OtherActor, Rage);

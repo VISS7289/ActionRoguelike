@@ -40,7 +40,7 @@ public:
 
 protected:
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	UStaticMeshComponent* WeaponMesh; // Ç¹ÐµÍø¸ñÌå
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")

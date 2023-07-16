@@ -12,7 +12,7 @@
 // 如果对方有反击标签，就被反击了，否则就正常攻击并附加火焰伤害
 void ASParryProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor != GetInstigator())
+	if (OtherActor && OtherActor != GetInstigator() && OtherActor->GetInstigator() != GetInstigator())
 	{
 		USActionComponent* ActionComp = Cast<USActionComponent>(OtherActor->GetComponentByClass(USActionComponent::StaticClass()));
 

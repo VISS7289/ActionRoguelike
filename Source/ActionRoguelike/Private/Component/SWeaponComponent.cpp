@@ -13,7 +13,7 @@ USWeaponComponent::USWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// 枪械网格体
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
 	WeaponMesh->SetSimulatePhysics(true);
 	// 默认7发子弹
 	BulletNumMax = 7;
