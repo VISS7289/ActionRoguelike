@@ -21,6 +21,9 @@ protected:
 	UPROPERTY()
 	USWeaponComponent* WeaponComp;
 
+	UPROPERTY(EditDefaultsOnly)
+	int32 ChangeDirection; // 改变方向，1为向右，-1为向左
+
 public:
 
 	virtual bool CanStart_Implementation(AActor* InstigatorActor) override;

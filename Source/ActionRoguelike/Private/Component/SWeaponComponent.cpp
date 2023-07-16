@@ -129,5 +129,5 @@ void USWeaponComponent::BulletTypeRight()
 // Ïò×óÐý×ª
 void USWeaponComponent::BulletTypeLeft()
 {
-	NowBulletType = (NowBulletType - 1) % BulletType.Num();
+	NowBulletType = (NowBulletType + BulletType.Num() - 1) % BulletType.Num();
 }
