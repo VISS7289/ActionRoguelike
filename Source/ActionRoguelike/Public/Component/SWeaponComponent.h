@@ -32,11 +32,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool CanFire();
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
 	void BulletTypeRight(); // 向右旋转
 
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
 	void BulletTypeLeft(); // 向左旋转
+
+	TSubclassOf<AActor> GetDefaultBullet();
 
 protected:
 

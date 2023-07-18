@@ -20,6 +20,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTagContainer ActiveGameplayTags;
 
+	// 查看FGameplayTagContainer是否有特定的gameplaytag
+	UFUNCTION(BlueprintPure, Category = "Tags")
+	bool ActionCompHasTag(const FGameplayTag& TagToCheck);
+
 	// 添加行动
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	void AddAction(AActor* InstigatorActor, TSubclassOf<USAction> ActionClass);

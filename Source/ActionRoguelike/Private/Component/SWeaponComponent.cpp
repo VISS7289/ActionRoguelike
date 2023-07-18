@@ -121,13 +121,18 @@ bool USWeaponComponent::CanFire()
 }
 
 // 向右旋转
-void USWeaponComponent::BulletTypeRight()
+void USWeaponComponent::BulletTypeRight_Implementation()
 {
 	NowBulletType = (NowBulletType + 1) % BulletType.Num();
 }
 
 // 向左旋转
-void USWeaponComponent::BulletTypeLeft()
+void USWeaponComponent::BulletTypeLeft_Implementation()
 {
 	NowBulletType = (NowBulletType + BulletType.Num() - 1) % BulletType.Num();
+}
+
+TSubclassOf<AActor> USWeaponComponent::GetDefaultBullet()
+{
+	return DefaultBullet;
 }

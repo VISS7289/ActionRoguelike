@@ -44,6 +44,7 @@ ASCharacter::ASCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝运动方向旋转
 	bUseControllerRotationYaw = false; // 禁用角色控制的左右旋转
+
 }
 
 // 注册事件回调函数
@@ -190,8 +191,9 @@ void ASCharacter::Look(const FInputActionValue& Value)
 
 // 格挡
 void ASCharacter::PrimaryParry()
-{
-	ActionComp->StartActionByName(this, "Parry");
+{/*
+	ActionComp->StartActionByName(this, "Parry");*/
+	ActionComp->StartActionByName(this, "Reload");
 }
 
 // 普通攻击

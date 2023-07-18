@@ -187,3 +187,9 @@ bool USActionComponent::ReplicateSubobjects(class UActorChannel* Channel, class 
 
 	return WroteSomething;
 }
+
+// 查看FGameplayTagContainer是否有特定的gameplaytag
+bool USActionComponent::ActionCompHasTag(const FGameplayTag& TagToCheck)
+{
+	return ActiveGameplayTags.HasTag(TagToCheck);
+}
