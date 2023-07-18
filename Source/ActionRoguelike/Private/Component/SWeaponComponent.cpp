@@ -23,7 +23,7 @@ USWeaponComponent::USWeaponComponent()
 
 // 开火
 // 选用现有的子弹类型，并子弹类型复位
-TSubclassOf<AActor> USWeaponComponent::Fire()
+TSubclassOf<ASProjectileBase> USWeaponComponent::Fire()
 {
 	// 保证有子弹
 	if (BulletInGun.Num() <= 0)
@@ -37,9 +37,9 @@ TSubclassOf<AActor> USWeaponComponent::Fire()
 	return BulletPop();
 }
 
-TSubclassOf<AActor> USWeaponComponent::BulletPop()
+TSubclassOf<ASProjectileBase> USWeaponComponent::BulletPop()
 {
-	TSubclassOf<AActor> PopBulletValue = BulletInGun[0];
+	TSubclassOf<ASProjectileBase> PopBulletValue = BulletInGun[0];
 	for (int i = 0; i < BulletInGun.Num() - 1; i++)
 	{
 		BulletInGun[i] = BulletInGun[i + 1];
@@ -49,7 +49,7 @@ TSubclassOf<AActor> USWeaponComponent::BulletPop()
 }
 
 // 装弹
-void USWeaponComponent::AddBullet(TSubclassOf<AActor> ProjectileClass)
+void USWeaponComponent::AddBullet(TSubclassOf<ASProjectileBase> ProjectileClass)
 {
 	// 不能超上限；
 	if (BulletInGun.Num() >= BulletNumMax)
@@ -132,7 +132,7 @@ void USWeaponComponent::BulletTypeLeft_Implementation()
 	NowBulletType = (NowBulletType + BulletType.Num() - 1) % BulletType.Num();
 }
 
-TSubclassOf<AActor> USWeaponComponent::GetDefaultBullet()
+TSubclassOf<ASProjectileBase> USWeaponComponent::GetDefaultBullet()
 {
 	return DefaultBullet;
 }

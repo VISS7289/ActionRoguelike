@@ -5,6 +5,7 @@
 #include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
 #include "Component/SWeaponComponent.h"
+#include "Item/Projectile/SProjectileBase.h"
 
 
 
@@ -39,7 +40,7 @@ bool USActionWeapon::CanStart_Implementation(AActor* InstigatorActor)
 void USActionWeapon::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 {
 
-	TSubclassOf<AActor> ProjectileBaseClass = WeaponComp->Fire(); // 发射物
+	TSubclassOf<ASProjectileBase> ProjectileBaseClass = WeaponComp->Fire(); // 发射物
 
 	if (ProjectileBaseClass)
 	{

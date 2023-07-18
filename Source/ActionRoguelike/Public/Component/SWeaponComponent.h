@@ -24,10 +24,10 @@ public:
 	static USWeaponComponent* GetWeaponComp(AActor* FromActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	TSubclassOf<AActor> Fire(); // 开火
+	TSubclassOf<ASProjectileBase> Fire(); // 开火
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void AddBullet(TSubclassOf<AActor> ProjectileClass); // 装弹
+	void AddBullet(TSubclassOf<ASProjectileBase> ProjectileClass); // 装弹
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	bool CanFire();
@@ -38,7 +38,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Weapon")
 	void BulletTypeLeft(); // 向左旋转
 
-	TSubclassOf<AActor> GetDefaultBullet();
+	TSubclassOf<ASProjectileBase> GetDefaultBullet();
 
 protected:
 
@@ -46,23 +46,23 @@ protected:
 	UStaticMeshComponent* WeaponMesh; // 枪械网格体
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<AActor> DefaultBullet; // 默认子弹
+	TSubclassOf<ASProjectileBase> DefaultBullet; // 默认子弹
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	int32 BulletNumMax; // 子弹上限
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
-	TArray<TSubclassOf<AActor>> BulletInGun; // 枪械中现存子弹
+	TArray<TSubclassOf<ASProjectileBase>> BulletInGun; // 枪械中现存子弹
 
 	int32 NowBulletType;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TArray<TSubclassOf<AActor>> BulletType;
+	TArray<TSubclassOf<ASProjectileBase>> BulletType;
 
 	UFUNCTION(BlueprintCallable)
 	void AddAll(); // 装满
 
-	TSubclassOf<AActor> BulletPop();
+	TSubclassOf<ASProjectileBase> BulletPop();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
