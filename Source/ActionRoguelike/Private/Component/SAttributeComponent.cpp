@@ -4,9 +4,11 @@
 #include "Component/SAttributeComponent.h"
 #include "Game/SGameModeBase.h"
 #include "Net/UnrealNetwork.h"
+#include "Attribute/SSingleAttribute.h"
 
 // ÉËº¦±¶³Ë×÷±×´úÂë
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultiplier"), 1.0f, TEXT("Global Damage Modifier For Attribute Component."), ECVF_Cheat);
+
 
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
@@ -17,6 +19,18 @@ USAttributeComponent::USAttributeComponent()
 	RageMax = 220;
 
 	SetIsReplicatedByDefault(true);
+}
+
+void USAttributeComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (EnergyClass)
+	{
+		Energy = NewObject<USSingleAttribute>(GetOwner(), EnergyClass);
+		Energy->InitValue(this);
+	}
+	
 }
 
 void USAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

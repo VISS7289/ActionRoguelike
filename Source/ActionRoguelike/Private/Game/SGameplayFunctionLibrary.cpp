@@ -4,6 +4,7 @@
 #include "Game/SGameplayFunctionLibrary.h"
 #include "Component/SAttributeComponent.h"
 #include "Components/PrimitiveComponent.h"
+#include "Attribute/SSingleAttribute.h"
 
 // 造成伤害函数
 // 调用TargetActor（目标）的属性组件的生命改变函数造成伤害
@@ -46,6 +47,18 @@ bool USGameplayFunctionLibrary::ApplyRage(AActor* RageCauser, AActor* TargetActo
 	if (AttributeComp)
 	{
 		return AttributeComp->ApplyRage(RageCauser, RageAmount);
+	}
+	return false;
+}
+
+// 造成怒气函数
+// 调用TargetActor（目标）的属性组件的怒气改变函数
+bool USGameplayFunctionLibrary::ApplyEnergy(AActor* EnergyCauser, AActor* TargetActor, float EnergyAmount)
+{
+	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(TargetActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	if (AttributeComp)
+	{
+		return AttributeComp->Energy->ApplyValueChange(EnergyCauser, EnergyAmount);
 	}
 	return false;
 }

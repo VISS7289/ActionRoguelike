@@ -9,6 +9,7 @@
 // 注册生命值改变事件
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatordActor, USAttributeComponent*, OwningComp, float, NewValue, float, Delta);
 
+class USSingleAttribute;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API USAttributeComponent : public UActorComponent
@@ -32,6 +33,11 @@ public:
 	// Sets default values for this component's properties
 	USAttributeComponent();
 
+	UPROPERTY(EditAnywhere, Category = "Attributes")
+	TSubclassOf<USSingleAttribute> EnergyClass;
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	USSingleAttribute* Energy;
+
 
 protected:
 
@@ -52,7 +58,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = "Attributes")
 	float RageMax; // 最大怒气值
-
 
 public:	
 
@@ -87,6 +92,8 @@ public:
 	// 改变怒气
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyRage(AActor* InstigatordActor, float Delta);
+
+	virtual void BeginPlay();
 
 	// 注册生命值改变事件
 	UPROPERTY(BlueprintAssignable)
