@@ -38,6 +38,7 @@ void ASDashProjectile::Explode_Implementation()
 	GetWorldTimerManager().SetTimer(FTimerHandle_TeleportDelay, this, &ASDashProjectile::TeleportInstigator, TeleportDelay);
 
 }
+
 // ÊµÏÖ´«ËÍ
 void ASDashProjectile::TeleportInstigator()
 {
