@@ -80,8 +80,8 @@ protected:
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
-	FVector PlayerForwardInput;
-	FVector PlayerBackwardInput;
+	FVector PlayerMoveInput;
+	bool Moving;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -175,8 +175,7 @@ protected:
 
 public:
 
-	FVector GetPlayerForwardInput();
-	FVector GetPlayerBackwardInput();
+	FVector GetPlayerMoveInput();
 
 public:	
 	// Called every frame

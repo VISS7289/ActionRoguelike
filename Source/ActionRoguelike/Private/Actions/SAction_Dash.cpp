@@ -4,6 +4,7 @@
 #include "Actions/SAction_Dash.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/SCharacter.h"
+#include "Camera/CameraComponent.h"
 
 
 USAction_Dash::USAction_Dash()
@@ -54,6 +55,9 @@ void USAction_Dash::Initialize(USActionComponent* NewActionComp)
     Super::Initialize(NewActionComp);
 
     DashSCharacter = Cast<ASCharacter>(Owner);
+    DashCamera = Cast<UCameraComponent>(DashSCharacter->GetComponentByClass(UCameraComponent::StaticClass()));
+    ensure(DashSCharacter);
+    ensure(DashCamera);
 }
 
 // 开始Action
@@ -69,7 +73,7 @@ void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
     // 计算起点终点
     StartPos = InstigatorActor->GetActorLocation();
 
-    FVector Fwd = InstigatorActor->GetActorForwardVector();
+    FVector Fwd = GetForward();
     EndPos = StartPos + Fwd * DashLength;
 
     // 播放TiemLine
@@ -80,4 +84,30 @@ void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
 void USAction_Dash::Tick(float DeltaTime)
 {
     CurveTimeline.TickTimeline(DeltaTime);
+}
+
+FVector USAction_Dash::GetForward()
+{
+    FVector Fwd = DashSCharacter->GetVelocity();
+    if (Fwd.IsZero())
+    {
+        Fwd = DashSCharacter->GetPlayerMoveInput();
+        FVector ActorForward = DashCamera->GetForwardVector();
+        if (Fwd.IsZero())
+        {
+            Fwd = ActorForward;
+        }
+        else
+        {
+            float YawAngle = FMath::Acos(FVector::DotProduct(FVector(1.0f, 0.0f, 0.0f), Fwd) / Fwd.Size()) * 180.0f / PI;
+            if (YawAngle != 0 && YawAngle != 180)
+            {
+                YawAngle *= FMath::Sign(FVector::CrossProduct(FVector(1.0f, 0.0f, 0.0f), Fwd).Z);
+            }
+            FRotator Rot = FRotator(0.0f, YawAngle, 0.0f);
+            Fwd = Rot.RotateVector(ActorForward);
+        }
+    }
+    Fwd.Z = 0;
+    return Fwd.GetSafeNormal();
 }

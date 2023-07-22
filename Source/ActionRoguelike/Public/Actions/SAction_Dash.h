@@ -11,6 +11,7 @@
 
 class UTimelineComponent;
 class ASCharacter;
+class UCameraComponent;
 
 /**
  * 
@@ -55,6 +56,8 @@ protected:
 
 	UPROPERTY()
 	ASCharacter* DashSCharacter;
+	UPROPERTY()
+	UCameraComponent* DashCamera;
 
 	UFUNCTION()
 	void SetupTimeline();
@@ -64,6 +67,8 @@ protected:
 
 	UFUNCTION()
 	void TimelineCallbackFunction();
+
+	FVector GetForward();
 
 	
 };

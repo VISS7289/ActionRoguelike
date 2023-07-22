@@ -77,6 +77,11 @@ void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!Moving)
+	{
+		PlayerMoveInput = FVector::Zero();
+	}
+	Moving = false;
 	//// Use the mouse scroll wheel to zoom in and out
 	//float ZoomSpeed = 1.0f;
 	//FVector newLocation = SpringArmComp->GetRelativeLocation() + SpringArmComp->GetForwardVector()* ZoomSpeed;
@@ -166,10 +171,10 @@ void ASCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		PlayerForwardInput = ForwardDirection;
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		PlayerBackwardInput = RightDirection;
+		PlayerMoveInput = FVector(MovementVector.Y, MovementVector.X, 0.0f);
+		Moving = true;
 
 		if (!ActionComp->ActionCompHasAny(MoveBlockedTags))
 		{
@@ -288,12 +293,7 @@ void ASCharacter::PrimaryInteract()
 	
 }
 
-FVector ASCharacter::GetPlayerForwardInput()
+FVector ASCharacter::GetPlayerMoveInput()
 {
-	return PlayerForwardInput;
-}
-
-FVector ASCharacter::GetPlayerBackwardInput()
-{
-	return PlayerBackwardInput;
+	return PlayerMoveInput;
 }
