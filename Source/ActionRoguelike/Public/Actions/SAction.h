@@ -54,13 +54,16 @@ protected:
 	FActionRepData RepData; // 同步的数据
 	//int Running = 0; // 运行状态
 
+	UPROPERTY()
+	AActor* Owner;
+
 	// 同步数据时
 	UFUNCTION()
 	void OnRep_RepData();
 
 public:
 
-	void Initialize(USActionComponent* NewActionComp);
+	virtual void Initialize(USActionComponent* NewActionComp);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool bAutoStart;

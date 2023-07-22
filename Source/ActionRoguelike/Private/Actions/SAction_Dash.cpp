@@ -3,6 +3,7 @@
 
 #include "Actions/SAction_Dash.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Player/SCharacter.h"
 
 
 USAction_Dash::USAction_Dash()
@@ -35,17 +36,24 @@ void USAction_Dash::TimelineProgressFunction(float Value)
     // 插值
     NowPos = UKismetMathLibrary::VLerp(StartPos, EndPos, Value);
     // 实时更新玩家位置
-    if (!DashActor->SetActorLocation(NowPos, true))
+    if (!DashSCharacter->SetActorLocation(NowPos, true))
     {
         CurveTimeline.Stop();
-        StopAction(DashActor);
+        StopAction(DashSCharacter);
     }
 }
 
 // TimeLine播放结束
 void USAction_Dash::TimelineCallbackFunction()
 {
-    StopAction(DashActor);
+    StopAction(DashSCharacter);
+}
+
+void USAction_Dash::Initialize(USActionComponent* NewActionComp)
+{
+    Super::Initialize(NewActionComp);
+
+    DashSCharacter = Cast<ASCharacter>(Owner);
 }
 
 // 开始Action
@@ -53,10 +61,6 @@ void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
 {
     Super::StartAction_Implementation(InstigatorActor);
     // 初始化
-    if (!DashActor)
-    {
-        DashActor = InstigatorActor;
-    }
     if (!HasInit)
     {
         SetupTimeline();

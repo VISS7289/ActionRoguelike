@@ -7,7 +7,6 @@
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 
-
 // Sets default values for this component's properties
 USActionComponent::USActionComponent()
 {
@@ -189,7 +188,11 @@ bool USActionComponent::ReplicateSubobjects(class UActorChannel* Channel, class 
 }
 
 // 查看FGameplayTagContainer是否有特定的gameplaytag
-bool USActionComponent::ActionCompHasTag(const FGameplayTag& TagToCheck)
+bool USActionComponent::ActionCompHasTag(FGameplayTag TagToCheck)
 {
 	return ActiveGameplayTags.HasTag(TagToCheck);
+}
+bool USActionComponent::ActionCompHasAny(const FGameplayTagContainer& ContainerToCheck)
+{
+	return ActiveGameplayTags.HasAny(ContainerToCheck);
 }

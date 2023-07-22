@@ -12,6 +12,7 @@
 void USAction::Initialize(USActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
+	Owner = NewActionComp->GetOwner();
 }
 
 

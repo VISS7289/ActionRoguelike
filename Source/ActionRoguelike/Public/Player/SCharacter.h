@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Engine/EngineTypes.h"
+#include "GameplayTagContainer.h"
+#include "Component/SActionComponent.h"
 #include "SCharacter.generated.h"
 
 class USpringArmComponent; // 弹簧臂组件
@@ -55,6 +57,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USActionComponent* ActionComp; // 行动组件
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTagContainer MoveBlockedTags; // 阻挡标签
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USWeaponComponent* WeaponComp; // 武器组件
@@ -76,6 +80,8 @@ protected:
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+	FVector PlayerForwardInput;
+	FVector PlayerBackwardInput;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -134,6 +140,11 @@ protected:
 	// 冲刺
 	void PrimaryDash();
 
+	// 跳跃开始
+	void PrimaryJumpStart();
+	// 跳跃结束
+	void PrimaryJumpEnd();
+
 	// 加速开始
 	void PrimarySprintStart();
 	// 加速结束
@@ -161,7 +172,11 @@ protected:
 	// 死亡判断
 	UFUNCTION()
 	void GetHealthChange(AActor* InstigatordActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
-	
+
+public:
+
+	FVector GetPlayerForwardInput();
+	FVector GetPlayerBackwardInput();
 
 public:	
 	// Called every frame

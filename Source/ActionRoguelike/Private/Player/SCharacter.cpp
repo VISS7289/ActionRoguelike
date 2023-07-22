@@ -69,6 +69,7 @@ void ASCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
 }
 
 // Called every frame
@@ -91,8 +92,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
 
 		// 跳跃
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryJumpStart);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ASCharacter::PrimaryJumpEnd);
 		// 移动
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASCharacter::Move);
 		// 看
@@ -165,13 +166,17 @@ void ASCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
+		PlayerForwardInput = ForwardDirection;
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		PlayerBackwardInput = RightDirection;
 
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		if (!ActionComp->ActionCompHasAny(MoveBlockedTags))
+		{
+			// add movement 
+			AddMovementInput(ForwardDirection, MovementVector.Y);
+			AddMovementInput(RightDirection, MovementVector.X);
+		}
 	}
 }
 
@@ -227,6 +232,19 @@ void ASCharacter::PrimarySprintEnd()
 	ActionComp->StopActionByName(this, "Sprint");
 }
 
+// 跳跃开始
+void ASCharacter::PrimaryJumpStart()
+{
+	UE_LOG(LogTemp, Log, TEXT("Jump Start"));
+	ActionComp->StartActionByName(this, "Jump");
+}
+// 跳跃结束
+void ASCharacter::PrimaryJumpEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Jump End"));
+	ActionComp->StopActionByName(this, "Jump");
+}
+
 // 蓄力开始
 void ASCharacter::AccumulateStart()
 {
@@ -268,4 +286,14 @@ void ASCharacter::PrimaryInteract()
 		InteractionComp->PrimaryInteract();
 	}
 	
+}
+
+FVector ASCharacter::GetPlayerForwardInput()
+{
+	return PlayerForwardInput;
+}
+
+FVector ASCharacter::GetPlayerBackwardInput()
+{
+	return PlayerBackwardInput;
 }

@@ -22,7 +22,9 @@ public:
 
 	// 查看FGameplayTagContainer是否有特定的gameplaytag
 	UFUNCTION(BlueprintPure, Category = "Tags")
-	bool ActionCompHasTag(const FGameplayTag& TagToCheck);
+	bool ActionCompHasTag(FGameplayTag TagToCheck);
+	UFUNCTION(BlueprintPure, Category = "Tags")
+	bool ActionCompHasAny(const FGameplayTagContainer& ContainerToCheck);
 
 	// 添加行动
 	UFUNCTION(BlueprintCallable, Category = "Action")

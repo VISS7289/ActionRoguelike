@@ -10,6 +10,7 @@
 #include "SAction_Dash.generated.h"
 
 class UTimelineComponent;
+class ASCharacter;
 
 /**
  * 
@@ -23,6 +24,7 @@ public:
 
 	USAction_Dash();
 
+	virtual void Initialize(USActionComponent* NewActionComp);
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 
 public:
@@ -52,7 +54,7 @@ protected:
 	FVector EndPos;
 
 	UPROPERTY()
-	AActor* DashActor;
+	ASCharacter* DashSCharacter;
 
 	UFUNCTION()
 	void SetupTimeline();

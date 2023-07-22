@@ -5,6 +5,7 @@
 #include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
 #include "Component/SWeaponComponent.h"
+#include "Component/SActionComponent.h"
 #include "Item/Projectile/SProjectileBase.h"
 
 
@@ -29,7 +30,12 @@ bool USActionWeapon::CanStart_Implementation(AActor* InstigatorActor)
 
 	if (ensure(WeaponComp))
 	{
-		return WeaponComp->CanFire();
+		if (!WeaponComp->CanFire())
+		{
+			GetOwningComponent()->StartActionByName(InstigatorActor, "Reload");
+			return false;
+		}
+		return true;
 	}
 
 	return false;
