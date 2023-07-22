@@ -20,6 +20,7 @@ bool USActionWeapon::CanStart_Implementation(AActor* InstigatorActor)
 {
 	if (!Super::CanStart_Implementation(InstigatorActor))
 	{
+		GetOwningComponent()->StopActionByName(InstigatorActor, "Accumulate");
 		return false;
 	}
 

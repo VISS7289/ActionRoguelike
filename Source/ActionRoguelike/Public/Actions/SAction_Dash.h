@@ -45,6 +45,30 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	UCurveFloat* Curve;
 
+	UFUNCTION()
+	void SetupTimeline();
+	UFUNCTION()
+	void TimelineProgressFunction(float Value);
+	UFUNCTION()
+	void TimelineCallbackFunction();
+
+protected:
+
+	UPROPERTY()
+	UAnimInstance* DashAnimIns;
+	UPROPERTY()
+	UAnimMontage* SelectAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* FwdDashAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* BackDashAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* LeftDashAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* RightDashAnim;
+
+protected:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	float DashLength; // ≥Â¥Ãæ‡¿Î
 	UPROPERTY()
@@ -59,16 +83,10 @@ protected:
 	UPROPERTY()
 	UCameraComponent* DashCamera;
 
-	UFUNCTION()
-	void SetupTimeline();
+	float GetYawByVector(FVector Fwd, FVector Act);
 
-	UFUNCTION()
-	void TimelineProgressFunction(float Value);
-
-	UFUNCTION()
-	void TimelineCallbackFunction();
+	void SelectAnimByVector(FVector Fwd, FVector Act);
 
 	FVector GetForward();
-
 	
 };

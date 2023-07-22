@@ -6,6 +6,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "SGameplayFunctionLibrary.generated.h"
 
+class UCurveFloat;
+
 /**
  * 
  */

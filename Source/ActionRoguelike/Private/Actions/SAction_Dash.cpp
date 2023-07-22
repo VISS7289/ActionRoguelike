@@ -22,7 +22,8 @@ void USAction_Dash::SetupTimeline()
     TimelineProgressFunction.BindUFunction(this, FName("TimelineProgressFunction"));
 
     CurveTimeline.SetLooping(false);
-    CurveTimeline.SetTimelineLength(0.2f);
+    CurveTimeline.SetTimelineLength(1.0f);
+    //CurveTimeline.SetPlayRate(5.0f);
     CurveTimeline.SetTimelineFinishedFunc(TimelineCallback);
     if (ensure(Curve))
     {
@@ -56,6 +57,7 @@ void USAction_Dash::Initialize(USActionComponent* NewActionComp)
 
     DashSCharacter = Cast<ASCharacter>(Owner);
     DashCamera = Cast<UCameraComponent>(DashSCharacter->GetComponentByClass(UCameraComponent::StaticClass()));
+    DashAnimIns = DashSCharacter->GetMesh()->GetAnimInstance();
     ensure(DashSCharacter);
     ensure(DashCamera);
 }
@@ -76,7 +78,13 @@ void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
     FVector Fwd = GetForward();
     EndPos = StartPos + Fwd * DashLength;
 
-    // ²¥·ÅTiemLine
+    // ²¥·Å
+    if (ensure(SelectAnim) && ensure(DashAnimIns))
+    {
+        DashAnimIns->Montage_Play(SelectAnim);
+        float rate = SelectAnim->GetPlayLength();
+        CurveTimeline.SetPlayRate(1 / rate);
+    }
     CurveTimeline.PlayFromStart();
 }
 
@@ -89,25 +97,58 @@ void USAction_Dash::Tick(float DeltaTime)
 FVector USAction_Dash::GetForward()
 {
     FVector Fwd = DashSCharacter->GetVelocity();
+    FVector ActorForward = DashCamera->GetForwardVector();
     if (Fwd.IsZero())
     {
         Fwd = DashSCharacter->GetPlayerMoveInput();
-        FVector ActorForward = DashCamera->GetForwardVector();
         if (Fwd.IsZero())
         {
             Fwd = ActorForward;
         }
         else
         {
-            float YawAngle = FMath::Acos(FVector::DotProduct(FVector(1.0f, 0.0f, 0.0f), Fwd) / Fwd.Size()) * 180.0f / PI;
-            if (YawAngle != 0 && YawAngle != 180)
-            {
-                YawAngle *= FMath::Sign(FVector::CrossProduct(FVector(1.0f, 0.0f, 0.0f), Fwd).Z);
-            }
+            float YawAngle = GetYawByVector(FVector(1.0f, 0.0f, 0.0f), Fwd);
             FRotator Rot = FRotator(0.0f, YawAngle, 0.0f);
             Fwd = Rot.RotateVector(ActorForward);
         }
     }
     Fwd.Z = 0;
+    SelectAnimByVector(ActorForward, Fwd);
     return Fwd.GetSafeNormal();
+}
+
+float USAction_Dash::GetYawByVector(FVector Fwd, FVector Act)
+{
+    float YawAngle = FMath::Acos(FVector::DotProduct(Fwd, Act) / (Act.Size() * Fwd.Size())) * 180.0f / PI;
+    if (YawAngle != 0 && YawAngle != 180)
+    {
+        YawAngle *= FMath::Sign(FVector::CrossProduct(Fwd, Act).Z);
+    }
+    return YawAngle;
+}
+
+void USAction_Dash::SelectAnimByVector(FVector Fwd, FVector Act)
+{
+    float YawAngle = GetYawByVector(Fwd, Act);
+
+    if (abs(YawAngle) < 45)
+    {
+        SelectAnim = FwdDashAnim;
+        return;
+    }
+    if (abs(YawAngle) > 135)
+    {
+        SelectAnim = BackDashAnim;
+        return;
+    }
+    if (abs(YawAngle - 90) <= 45)
+    {
+        SelectAnim = RightDashAnim;
+        return;
+    }
+    if (ensure(abs(YawAngle + 90) <= 45))
+    {
+        SelectAnim = LeftDashAnim;
+        return;
+    }
 }
