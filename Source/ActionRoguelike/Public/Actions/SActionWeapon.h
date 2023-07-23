@@ -23,19 +23,33 @@ protected:
 	USWeaponComponent* WeaponComp;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	UAnimMontage* AttackAnim; // ÆÕÍ¨¹¥»÷ÃÉÌ«Ææ
-
-	UPROPERTY(EditAnywhere, Category = "Attack")
 	FName HandSocketName; // ·¢ÉäÅ×ÉäÎï²å²ÛÃû³Æ
 
 	FTimerHandle TimerHandle_PrimaryAttack; // ÑÓÊ±
 
-	// ÊµÊ©¹¥»÷
 	UFUNCTION()
 	virtual void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);
 
+protected:
+
+	UPROPERTY()
+	UAnimInstance* CharacterAnimIns;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim; // ÆÕÍ¨¹¥»÷ÃÉÌ«Ææ
+	UPROPERTY()
+	ACharacter* FireCharacter;
+
+protected:
+
+	// ÊµÊ©¹¥»÷
+	virtual void PlayFireAnim();
+	UFUNCTION()
+	virtual void FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+
 public:
 
+
+	virtual void Initialize_Implementation(USActionComponent* NewActionComp) override;
 	virtual bool CanStart_Implementation(AActor* InstigatorActor) override;
 
 	USActionWeapon();

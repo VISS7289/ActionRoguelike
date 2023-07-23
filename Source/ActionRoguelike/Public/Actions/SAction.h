@@ -63,13 +63,14 @@ protected:
 
 public:
 
-	virtual void Initialize(USActionComponent* NewActionComp);
-
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool bAutoStart;
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	bool IsRunning() const;
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	void Initialize(USActionComponent* NewActionComp);
 
 	// 判断是否可以开始
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")

@@ -22,7 +22,7 @@ class ACTIONROGUELIKE_API USAction_Accumulate : public USActionWeapon, public FT
 public:
 
 	USAction_Accumulate();
-	virtual void Initialize(USActionComponent* NewActionComp);
+	virtual void Initialize_Implementation(USActionComponent* NewActionComp) override;
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
 
@@ -37,21 +37,15 @@ public:
 
 protected:
 
-	UPROPERTY()
-	UAnimInstance* AccuAnimIns;
-	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UPROPERTY(EditDefaultsOnly, Category = "Accumulate")
 	UAnimMontage* AccuStartAnim;
-	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
-	UAnimMontage* AccuFireAnim;
-	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UPROPERTY(EditDefaultsOnly, Category = "Accumulate")
 	UAnimMontage* AccuLoopAnim;
 
 protected:
 
 	UFUNCTION()
 	void PlayAccuLoop(UAnimMontage* Montage, bool bInterrupted);
-	UFUNCTION()
-	void FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 
 protected:
 

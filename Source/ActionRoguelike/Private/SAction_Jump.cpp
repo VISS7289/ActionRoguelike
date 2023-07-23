@@ -4,11 +4,12 @@
 #include "SAction_Jump.h"
 #include "GameFramework/Character.h"
 
-void USAction_Jump::Initialize(USActionComponent* NewActionComp)
+void USAction_Jump::Initialize_Implementation(USActionComponent* NewActionComp)
 {
-	Super::Initialize(NewActionComp);
+	Super::Initialize_Implementation(NewActionComp);
 
 	OwningCharacter = Cast<ACharacter>(Owner);
+	ensure(OwningCharacter);
 }
 
 void USAction_Jump::StartAction_Implementation(AActor* InstigatorActor)

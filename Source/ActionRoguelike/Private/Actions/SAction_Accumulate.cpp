@@ -39,15 +39,13 @@ void USAction_Accumulate::TimelineProgressFunction(float Value)
     SpringArmComp->SocketOffset = NowPos;
 }
 
-void USAction_Accumulate::Initialize(USActionComponent* NewActionComp)
+void USAction_Accumulate::Initialize_Implementation(USActionComponent* NewActionComp)
 {
-    Super::Initialize(NewActionComp);
+    Super::Initialize_Implementation(NewActionComp);
 
     AccuCharacter = Cast<ACharacter>(Owner);
-    AccuAnimIns = AccuCharacter->GetMesh()->GetAnimInstance();
     SpringArmComp = Cast<USpringArmComponent>(Owner->GetComponentByClass(USpringArmComponent::StaticClass()));
     ensure(SpringArmComp);
-    ensure(AccuAnimIns);
     StartPos = SpringArmComp->SocketOffset;
     EndPos = StartPos + FVector(1, 0, 0) * CameraAccumulate;
 
@@ -61,10 +59,10 @@ void USAction_Accumulate::StartAction_Implementation(AActor* InstigatorActor)
     Super::StartAction_Implementation(InstigatorActor);
 
     // 播放
-    if (ensure(AccuStartAnim) && ensure(AccuAnimIns))
+    if (ensure(AccuStartAnim) && ensure(CharacterAnimIns))
     {
-        AccuAnimIns->Montage_Play(AccuStartAnim);
-        AccuAnimIns->OnMontageBlendingOut.AddDynamic(this, &USAction_Accumulate::PlayAccuLoop);
+        CharacterAnimIns->Montage_Play(AccuStartAnim);
+        CharacterAnimIns->OnMontageBlendingOut.AddDynamic(this, &USAction_Accumulate::PlayAccuLoop);
     }
     CurveTimeline.PlayFromStart();
 }
@@ -75,19 +73,16 @@ void USAction_Accumulate::StopAction_Implementation(AActor* InstigatorActor)
 	Super::StopAction_Implementation(InstigatorActor);
     // 停止TiemLine
     CurveTimeline.Stop();
-    if (ensure(AccuFireAnim) && ensure(AccuAnimIns))
+    if (ensure(AttackAnim) && ensure(CharacterAnimIns))
     {
-        AccuAnimIns->OnMontageBlendingOut.RemoveDynamic(this, &USAction_Accumulate::PlayAccuLoop);
-        AccuAnimIns->Montage_Stop(0.0f, AccuStartAnim);
-        AccuAnimIns->Montage_Stop(0.0f, AccuLoopAnim);
-        AccuAnimIns->Montage_Play(AccuFireAnim);
-        AccuAnimIns->OnPlayMontageNotifyBegin.AddDynamic(this, &USAction_Accumulate::FireNotify);
+        CharacterAnimIns->OnMontageBlendingOut.RemoveDynamic(this, &USAction_Accumulate::PlayAccuLoop);
+        CharacterAnimIns->Montage_Stop(0.0f, AccuStartAnim);
+        CharacterAnimIns->Montage_Stop(0.0f, AccuLoopAnim);
+        PlayFireAnim();
     }
     // 相机恢复
     SpringArmComp->SocketOffset = StartPos;
 }
-    
-
 
 // 每Tick更新Timeline
 void USAction_Accumulate::Tick(float DeltaTime)
@@ -97,20 +92,9 @@ void USAction_Accumulate::Tick(float DeltaTime)
 
 void USAction_Accumulate::PlayAccuLoop(UAnimMontage* Montage, bool bInterrupted)
 {
-    if (ensure(AccuLoopAnim) && ensure(AccuAnimIns))
+    if (ensure(AccuLoopAnim) && ensure(CharacterAnimIns))
     {
         UE_LOG(LogTemp, Log, TEXT("AccuLoop"));
-        AccuAnimIns->Montage_Play(AccuLoopAnim);
-    }
-}
-
-void USAction_Accumulate::FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
-{
-    AccuAnimIns->OnPlayMontageNotifyBegin.RemoveDynamic(this, &USAction_Accumulate::FireNotify);
-
-    // 发射子弹
-    if (ensure(AccuCharacter))
-    {
-        AttackDelay_Elapsed(AccuCharacter);
+        CharacterAnimIns->Montage_Play(AccuLoopAnim);
     }
 }

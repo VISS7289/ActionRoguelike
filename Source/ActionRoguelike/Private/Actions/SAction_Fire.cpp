@@ -16,28 +16,9 @@ void USAction_Fire::StartAction_Implementation(AActor* InstigatorActor)
 	{
 		if (ensure(AttackAnim))
 		{
-			Character->PlayAnimMontage(AttackAnim);
-
-			if (Character->HasAuthority())
-			{
-				FTimerHandle TimerHandle_AttackDelay;
-				FTimerDelegate Delegate;
-				Delegate.BindUFunction(this, "AttackDelay_Elapsed", Character);
-
-				float AttackDelay = 0.2f;
-
-				GetWorld()->GetTimerManager().SetTimer(TimerHandle_AttackDelay, Delegate, AttackDelay, false);
-			}
-
+			PlayFireAnim();
+			StopAction(InstigatorActor);
 		}
 	}
 
-}
-
-// ¹¥»÷½áÊøºó½áÊøAction
-void USAction_Fire::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
-{
-	Super::AttackDelay_Elapsed(InstigatorCharacter);
-
-	StopAction(InstigatorCharacter);
 }

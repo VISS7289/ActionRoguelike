@@ -20,8 +20,5 @@ public:
 
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 
-protected:
-
-	virtual void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);
 
 };

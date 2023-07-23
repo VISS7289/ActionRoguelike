@@ -18,7 +18,7 @@ class ACTIONROGUELIKE_API USAction_Jump : public USAction
 
 public:
 
-	virtual void Initialize(USActionComponent* NewActionComp);
+	virtual void Initialize_Implementation(USActionComponent* NewActionComp);
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
 

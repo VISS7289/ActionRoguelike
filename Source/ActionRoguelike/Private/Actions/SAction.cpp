@@ -9,7 +9,7 @@
 #include "Net/UnrealNetwork.h"
 
 
-void USAction::Initialize(USActionComponent* NewActionComp)
+void USAction::Initialize_Implementation(USActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
 	Owner = NewActionComp->GetOwner();

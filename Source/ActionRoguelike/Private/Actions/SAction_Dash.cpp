@@ -37,6 +37,9 @@ void USAction_Dash::TimelineProgressFunction(float Value)
 {
     // 插值
     NowPos = UKismetMathLibrary::VLerp(StartPos, EndPos, Value);
+    FVector RealPos = DashSCharacter->GetActorLocation();
+    NowPos.Z = RealPos.Z;
+
     // 实时更新玩家位置
     if (!DashSCharacter->SetActorLocation(NowPos, true))
     {
@@ -48,12 +51,13 @@ void USAction_Dash::TimelineProgressFunction(float Value)
 // TimeLine播放结束
 void USAction_Dash::TimelineCallbackFunction()
 {
+    DashSCharacter->bSimGravityDisabled = true;
     StopAction(DashSCharacter);
 }
 
-void USAction_Dash::Initialize(USActionComponent* NewActionComp)
+void USAction_Dash::Initialize_Implementation(USActionComponent* NewActionComp)
 {
-    Super::Initialize(NewActionComp);
+    Super::Initialize_Implementation(NewActionComp);
 
     DashSCharacter = Cast<ASCharacter>(Owner);
     DashCamera = Cast<UCameraComponent>(DashSCharacter->GetComponentByClass(UCameraComponent::StaticClass()));
@@ -68,7 +72,7 @@ void USAction_Dash::Initialize(USActionComponent* NewActionComp)
 void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
 {
     Super::StartAction_Implementation(InstigatorActor);
-
+    
     // 计算起点终点
     StartPos = InstigatorActor->GetActorLocation();
 

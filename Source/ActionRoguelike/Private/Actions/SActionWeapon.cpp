@@ -15,6 +15,17 @@ USActionWeapon::USActionWeapon()
 	HandSocketName = "Muzzle_02"; // 左手发射骨骼名称
 }
 
+void USActionWeapon::Initialize_Implementation(USActionComponent* NewActionComp)
+{
+	Super::Initialize_Implementation(NewActionComp);
+
+	FireCharacter = Cast<ACharacter>(Owner);
+	CharacterAnimIns = FireCharacter->GetMesh()->GetAnimInstance();
+	WeaponComp = USWeaponComponent::GetWeaponComp(FireCharacter);
+	ensure(CharacterAnimIns);
+	ensure(WeaponComp);
+}
+
 // 判断是否可以攻击
 bool USActionWeapon::CanStart_Implementation(AActor* InstigatorActor)
 {
@@ -22,11 +33,6 @@ bool USActionWeapon::CanStart_Implementation(AActor* InstigatorActor)
 	{
 		GetOwningComponent()->StopActionByName(InstigatorActor, "Accumulate");
 		return false;
-	}
-
-	if (!WeaponComp)
-	{
-		WeaponComp = USWeaponComponent::GetWeaponComp(InstigatorActor);
 	}
 
 	if (ensure(WeaponComp))
@@ -85,5 +91,25 @@ void USActionWeapon::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 		SpawnParames.Instigator = InstigatorCharacter;
 		// 生成抛射物
 		GetWorld()->SpawnActor<AActor>(ProjectileBaseClass, SpawnTM, SpawnParames);
+	}
+}
+
+void USActionWeapon::PlayFireAnim()
+{
+	if (ensure(CharacterAnimIns) && ensure(AttackAnim))
+	{
+		CharacterAnimIns->Montage_Play(AttackAnim);
+		CharacterAnimIns->OnPlayMontageNotifyBegin.AddDynamic(this, &USActionWeapon::FireNotify);
+	}
+}
+
+void USActionWeapon::FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+	CharacterAnimIns->OnPlayMontageNotifyBegin.RemoveDynamic(this, &USActionWeapon::FireNotify);
+
+	// 发射子弹
+	if (ensure(FireCharacter))
+	{
+		AttackDelay_Elapsed(FireCharacter);
 	}
 }

@@ -25,7 +25,7 @@ public:
 
 	USAction_Dash();
 
-	virtual void Initialize(USActionComponent* NewActionComp);
+	virtual void Initialize_Implementation(USActionComponent* NewActionComp);
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 
 public:
