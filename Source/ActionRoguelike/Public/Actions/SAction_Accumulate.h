@@ -22,6 +22,9 @@ class ACTIONROGUELIKE_API USAction_Accumulate : public USActionWeapon, public FT
 public:
 
 	USAction_Accumulate();
+	virtual void Initialize(USActionComponent* NewActionComp);
+	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
+	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
 
 public:
 	// 抽象类FTickableGameObject必须重载的函数
@@ -33,6 +36,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+
+	UPROPERTY()
+	UAnimInstance* AccuAnimIns;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* AccuStartAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* AccuFireAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "DashAnim")
+	UAnimMontage* AccuLoopAnim;
+
+protected:
+
+	UFUNCTION()
+	void PlayAccuLoop(UAnimMontage* Montage, bool bInterrupted);
+	UFUNCTION()
+	void FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+
+protected:
+
 	// Timeline相关
 	bool HasInit;
 	FTimeline CurveTimeline;
@@ -46,14 +68,13 @@ protected:
 	FVector EndPos;
 	UPROPERTY()
 	USpringArmComponent* SpringArmComp; // 弹簧臂组件
+	UPROPERTY()
+	ACharacter* AccuCharacter;
 
 	// 聚焦状态相关
 	UPROPERTY(EditDefaultsOnly, Category = "Accumulate")
 	float MaxAccumulateTime;
 	float CurrentAccumulateTime;
-
-	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
-	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
 
 	UFUNCTION()
 	void SetupTimeline();

@@ -60,17 +60,14 @@ void USAction_Dash::Initialize(USActionComponent* NewActionComp)
     DashAnimIns = DashSCharacter->GetMesh()->GetAnimInstance();
     ensure(DashSCharacter);
     ensure(DashCamera);
+
+    SetupTimeline();
 }
 
 // 开始Action
 void USAction_Dash::StartAction_Implementation(AActor* InstigatorActor)
 {
     Super::StartAction_Implementation(InstigatorActor);
-    // 初始化
-    if (!HasInit)
-    {
-        SetupTimeline();
-    }
 
     // 计算起点终点
     StartPos = InstigatorActor->GetActorLocation();

@@ -21,6 +21,8 @@ void USAction_Accumulate::SetupTimeline()
 
     CurveTimeline.SetLooping(false);
     CurveTimeline.SetTimelineLength(MaxAccumulateTime);
+    float rate = AccuStartAnim->GetPlayLength();
+    CurveTimeline.SetPlayRate(1 / rate);
     if (ensure(Curve))
     {
         CurveTimeline.AddInterpFloat(Curve, TimelineProgressFunction);
@@ -37,27 +39,33 @@ void USAction_Accumulate::TimelineProgressFunction(float Value)
     SpringArmComp->SocketOffset = NowPos;
 }
 
+void USAction_Accumulate::Initialize(USActionComponent* NewActionComp)
+{
+    Super::Initialize(NewActionComp);
+
+    AccuCharacter = Cast<ACharacter>(Owner);
+    AccuAnimIns = AccuCharacter->GetMesh()->GetAnimInstance();
+    SpringArmComp = Cast<USpringArmComponent>(Owner->GetComponentByClass(USpringArmComponent::StaticClass()));
+    ensure(SpringArmComp);
+    ensure(AccuAnimIns);
+    StartPos = SpringArmComp->SocketOffset;
+    EndPos = StartPos + FVector(1, 0, 0) * CameraAccumulate;
+
+    SetupTimeline();
+}
+
+
 // Action开始
 void USAction_Accumulate::StartAction_Implementation(AActor* InstigatorActor)
 {
     Super::StartAction_Implementation(InstigatorActor);
-    // 初始化相关数据
-    if (!SpringArmComp)
-    {
-        SpringArmComp = Cast<USpringArmComponent>(InstigatorActor->GetComponentByClass(USpringArmComponent::StaticClass()));
-        if (ensure(SpringArmComp))
-        {
-            
-            StartPos = SpringArmComp->SocketOffset;
-            EndPos = StartPos + FVector(1,0,0) * CameraAccumulate;
-        }
-    }
-    if (!HasInit)
-    {
-        SetupTimeline();
-    }
 
-    // 播放TiemLine
+    // 播放
+    if (ensure(AccuStartAnim) && ensure(AccuAnimIns))
+    {
+        AccuAnimIns->Montage_Play(AccuStartAnim);
+        AccuAnimIns->OnMontageBlendingOut.AddDynamic(this, &USAction_Accumulate::PlayAccuLoop);
+    }
     CurveTimeline.PlayFromStart();
 }
 
@@ -67,18 +75,42 @@ void USAction_Accumulate::StopAction_Implementation(AActor* InstigatorActor)
 	Super::StopAction_Implementation(InstigatorActor);
     // 停止TiemLine
     CurveTimeline.Stop();
-    // 发射子弹
-    ACharacter* Character = Cast<ACharacter>(InstigatorActor);
-    if (Character)
+    if (ensure(AccuFireAnim) && ensure(AccuAnimIns))
     {
-        AttackDelay_Elapsed(Character);
+        AccuAnimIns->OnMontageBlendingOut.RemoveDynamic(this, &USAction_Accumulate::PlayAccuLoop);
+        AccuAnimIns->Montage_Stop(0.0f, AccuStartAnim);
+        AccuAnimIns->Montage_Stop(0.0f, AccuLoopAnim);
+        AccuAnimIns->Montage_Play(AccuFireAnim);
+        AccuAnimIns->OnPlayMontageNotifyBegin.AddDynamic(this, &USAction_Accumulate::FireNotify);
     }
     // 相机恢复
     SpringArmComp->SocketOffset = StartPos;
 }
+    
+
 
 // 每Tick更新Timeline
 void USAction_Accumulate::Tick(float DeltaTime)
 {
     CurveTimeline.TickTimeline(DeltaTime);
+}
+
+void USAction_Accumulate::PlayAccuLoop(UAnimMontage* Montage, bool bInterrupted)
+{
+    if (ensure(AccuLoopAnim) && ensure(AccuAnimIns))
+    {
+        UE_LOG(LogTemp, Log, TEXT("AccuLoop"));
+        AccuAnimIns->Montage_Play(AccuLoopAnim);
+    }
+}
+
+void USAction_Accumulate::FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+    AccuAnimIns->OnPlayMontageNotifyBegin.RemoveDynamic(this, &USAction_Accumulate::FireNotify);
+
+    // 发射子弹
+    if (ensure(AccuCharacter))
+    {
+        AttackDelay_Elapsed(AccuCharacter);
+    }
 }
