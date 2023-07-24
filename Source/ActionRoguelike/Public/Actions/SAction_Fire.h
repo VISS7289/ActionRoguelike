@@ -19,6 +19,15 @@ class ACTIONROGUELIKE_API USAction_Fire : public USActionWeapon
 public:
 
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
+	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
+	virtual void FireAnimEnd(UAnimMontage* Montage, bool bInterrupted);
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
+	bool isLoop;
+
+	bool FireEnd;
 
 
 };

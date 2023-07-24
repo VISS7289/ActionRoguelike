@@ -94,6 +94,8 @@ protected:
 	// ÆÕÍ¨¹¥»÷
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PrimaryAttackAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PrimaryAttackActionEnd;
 
 	// ³å´Ì
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -136,6 +138,7 @@ protected:
 
 	// ÆÕÍ¨¹¥»÷
 	void PrimaryAttack();
+	void PrimaryAttackEnd();
 
 	// ³å´Ì
 	void PrimaryDash();

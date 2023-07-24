@@ -45,12 +45,14 @@ protected:
 	virtual void PlayFireAnim();
 	UFUNCTION()
 	virtual void FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+	UFUNCTION()
+	virtual void FireAnimEnd(UAnimMontage* Montage, bool bInterrupted);
 
 public:
 
-
 	virtual void Initialize_Implementation(USActionComponent* NewActionComp) override;
 	virtual bool CanStart_Implementation(AActor* InstigatorActor) override;
+	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
 
 	USActionWeapon();
 	

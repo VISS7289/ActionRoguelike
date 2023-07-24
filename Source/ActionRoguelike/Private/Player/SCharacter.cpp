@@ -107,6 +107,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(PrimaryParryAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryParry);
 		// 普通攻击
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		EnhancedInputComponent->BindAction(PrimaryAttackActionEnd, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttackEnd);
 		// 冲刺
 		EnhancedInputComponent->BindAction(PrimaryDashAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryDash);
 		// 加速开始
@@ -211,6 +212,10 @@ void ASCharacter::PrimaryAttack()
 {
 
 	ActionComp->StartActionByName(this, "Fire");
+}
+void ASCharacter::PrimaryAttackEnd()
+{
+	ActionComp->StopActionByName(this, "Fire");
 }
 
 // 冲刺(目前冲刺逻辑是释放冲刺子弹，所以内容和普通攻击一样了。。)

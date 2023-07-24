@@ -100,6 +100,7 @@ void USActionWeapon::PlayFireAnim()
 	{
 		CharacterAnimIns->Montage_Play(AttackAnim);
 		CharacterAnimIns->OnPlayMontageNotifyBegin.AddDynamic(this, &USActionWeapon::FireNotify);
+		CharacterAnimIns->OnMontageBlendingOut.AddDynamic(this, &USActionWeapon::FireAnimEnd);
 	}
 }
 
@@ -112,4 +113,14 @@ void USActionWeapon::FireNotify(FName NotifyName, const FBranchingPointNotifyPay
 	{
 		AttackDelay_Elapsed(FireCharacter);
 	}
+}
+
+void USActionWeapon::FireAnimEnd(UAnimMontage* Montage, bool bInterrupted)
+{
+	CharacterAnimIns->OnMontageBlendingOut.RemoveDynamic(this, &USActionWeapon::FireAnimEnd);
+}
+
+void USActionWeapon::StopAction_Implementation(AActor* InstigatorActor)
+{
+	Super::StopAction_Implementation(InstigatorActor);
 }
