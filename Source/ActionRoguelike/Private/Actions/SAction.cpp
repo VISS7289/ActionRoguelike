@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Component/SActionComponent.h"
 #include "Game/SGameplayFunctionLibrary.h"
+#include "Actions/SAction_Cold.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -13,6 +14,11 @@ void USAction::Initialize_Implementation(USActionComponent* NewActionComp)
 {
 	ActionComp = NewActionComp;
 	Owner = NewActionComp->GetOwner();
+	if (ColdSetting.ColdClass)
+	{
+		ColdInstance = NewObject<USAction_Cold>(Owner, ColdSetting.ColdClass);
+		ColdInstance->InitCold(ColdSetting.ColdTime);
+	}
 }
 
 
@@ -22,6 +28,11 @@ bool USAction::CanStart_Implementation(AActor* InstigatorActor)
 {
 	USActionComponent* Comp = GetOwningComponent();
 	if (Comp->ActiveGameplayTags.HasAny(BlockedTags) || RepData.Running > 0)
+	{
+		return false;
+	}
+
+	if (ColdInstance && ColdInstance->IsInCold())
 	{
 		return false;
 	}
@@ -37,6 +48,11 @@ void USAction::StartAction_Implementation(AActor* InstigatorActor)
 
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.AppendTags(GrantsTags);
+
+	if (ColdInstance)
+	{
+		ColdInstance->StartCold();
+	}
 
 	RepData.Running++;
 	RepData.InstigatorActor = InstigatorActor;

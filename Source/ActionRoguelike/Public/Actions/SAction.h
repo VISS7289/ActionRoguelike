@@ -10,6 +10,7 @@
 
 class UWorld;
 class USActionComponent; // 行动组件
+class USAction_Cold;
 
 
 USTRUCT()
@@ -27,6 +28,22 @@ public:
 
 };
 
+USTRUCT()
+struct FColdSet
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Cold")
+	TSubclassOf<USAction_Cold> ColdClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Cold")
+	float ColdTime;
+
+};
+
+
 /**
  * 
  */
@@ -36,6 +53,11 @@ class ACTIONROGUELIKE_API USAction : public UObject
 	GENERATED_BODY()
 	
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Cold")
+	FColdSet ColdSetting;
+	UPROPERTY()
+	USAction_Cold* ColdInstance;
 
 	UPROPERTY(Replicated)
 	TObjectPtr<USActionComponent> ActionComp;
