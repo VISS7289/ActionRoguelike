@@ -18,13 +18,13 @@ class ACTIONROGUELIKE_API USAction_Jump : public USAction
 
 public:
 
-	virtual void Initialize_Implementation(USActionComponent* NewActionComp);
+	virtual void Initialize_Implementation(USActionComponent* NewActionComp) override;
 	virtual void StartAction_Implementation(AActor* InstigatorActor) override;
 	virtual void StopAction_Implementation(AActor* InstigatorActor) override;
 
 protected:
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	ACharacter* OwningCharacter;
 	
 };

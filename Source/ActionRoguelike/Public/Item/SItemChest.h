@@ -47,7 +47,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* EffectComp; // Á£×ÓÏµÍ³
 
-	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", SaveGame)
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", SaveGame, BlueprintReadOnly)
 	bool bLidOpened;
 
 	UFUNCTION()

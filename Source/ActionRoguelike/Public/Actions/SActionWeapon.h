@@ -19,7 +19,7 @@ class ACTIONROGUELIKE_API USActionWeapon : public USAction
 
 protected:
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	USWeaponComponent* WeaponComp;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
@@ -32,11 +32,11 @@ protected:
 
 protected:
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	UAnimInstance* CharacterAnimIns;
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim; // ÆÕÍ¨¹¥»÷ÃÉÌ«Ææ
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	ACharacter* FireCharacter;
 
 protected:

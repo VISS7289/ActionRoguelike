@@ -7,6 +7,7 @@
 #include "Component/SWeaponComponent.h"
 #include "Component/SActionComponent.h"
 #include "Item/Projectile/SProjectileBase.h"
+#include "Net/UnrealNetwork.h"
 
 
 
@@ -96,12 +97,17 @@ void USActionWeapon::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 
 void USActionWeapon::PlayFireAnim()
 {
-	if (ensure(CharacterAnimIns) && ensure(AttackAnim))
+	if (ensure(CharacterAnimIns))
 	{
-		CharacterAnimIns->Montage_Play(AttackAnim);
-		CharacterAnimIns->OnPlayMontageNotifyBegin.AddDynamic(this, &USActionWeapon::FireNotify);
-		CharacterAnimIns->OnMontageBlendingOut.AddDynamic(this, &USActionWeapon::FireAnimEnd);
+		CharacterAnimIns = FireCharacter->GetMesh()->GetAnimInstance();
+		if (ensureAlways(CharacterAnimIns) && ensure(AttackAnim))
+		{
+			CharacterAnimIns->Montage_Play(AttackAnim);
+			CharacterAnimIns->OnPlayMontageNotifyBegin.AddDynamic(this, &USActionWeapon::FireNotify);
+			CharacterAnimIns->OnMontageBlendingOut.AddDynamic(this, &USActionWeapon::FireAnimEnd);
+		}
 	}
+	
 }
 
 void USActionWeapon::FireNotify(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
@@ -123,4 +129,13 @@ void USActionWeapon::FireAnimEnd(UAnimMontage* Montage, bool bInterrupted)
 void USActionWeapon::StopAction_Implementation(AActor* InstigatorActor)
 {
 	Super::StopAction_Implementation(InstigatorActor);
+}
+
+void USActionWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(USActionWeapon, WeaponComp);
+	DOREPLIFETIME(USActionWeapon, FireCharacter);
+	DOREPLIFETIME(USActionWeapon, CharacterAnimIns);
 }
